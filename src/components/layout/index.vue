@@ -2,8 +2,9 @@
   <el-container>
     <el-header height="60px">
       <el-row>
-        <el-col :span="8" style="text-align: left">
-          <span class="header-title header-text">人民银行法规库</span>
+        <el-col :span="8" class="header-title">
+          <i class="el-icon-collection"></i>
+          <span class="header-text">人民银行法规库</span>
         </el-col>
         <el-col :span="6" :offset="10" style="text-align: right">
           <span class="header-text" style="color: white">欢迎，</span>
@@ -23,7 +24,7 @@
       <el-aside width="16vw">
         <!-- 这里是个菜单厚 -->
         <el-menu
-          default-active="home"
+          default-active="/home"
           router
           class="el-menu-vertical-demo"
           style="height: 100%">
@@ -31,7 +32,7 @@
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-submenu>
+          <el-submenu index="">
             <template slot="title">
               <i class="el-icon-s-management"></i>
               <span>外规管理</span>
@@ -82,6 +83,7 @@ export default {
 <style scoped>
 .header-title {
   color: white;
+  text-align: left;
   font-family: 幼圆;
   font-size: x-large;
 }
@@ -137,17 +139,5 @@ body > .el-container {
 
 .el-tabs__nav {
   line-height: 30px;
-}
-
-.el-collapse-item {
-  text-align: left;
-}
-
-.el-collapse-item__header {
-  font-size: 14px;
-}
-
-.el-collapse-item__content {
-  font-size: 14px;
 }
 </style>
