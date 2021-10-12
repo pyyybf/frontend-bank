@@ -72,7 +72,7 @@ export default {
     handleLogout() {
       this.logout().then(res => {
         this.$message.success(res);
-        this.$router.push({path: '/'});
+        this.$router.push({path: '/login'});
       })
     },
   },

@@ -49,6 +49,7 @@ export default {
       this.login(this.loginForm).then(res => {
         this.loginLoading = false;
         this.$message.success(res);
+        this.$router.push({path: '/home'});
       }).catch(err => {
         this.$message.error(err);
         this.loginLoading = false;
