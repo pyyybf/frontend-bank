@@ -1,6 +1,6 @@
 # frontend-bank
 
-> A Vue.js project
+> 面向互联网+的软件开发技术方向综合实践：人民银行法规库前端
 
 ## Build Setup
 
