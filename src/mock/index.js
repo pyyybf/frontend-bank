@@ -17,8 +17,8 @@ var statutes = [
     item3: '2013-01-05',
     item4: '2013-01-02',
     item5: '银监会',
-    item6: 1,
-    item7: 1,
+    item6: '1',
+    item7: '1',
   },
   {
     id: 2,
@@ -27,8 +27,8 @@ var statutes = [
     item3: '2013-01-05',
     item4: '2013-01-02',
     item5: '人民银行',
-    item6: 0,
-    item7: 0,
+    item6: '0',
+    item7: '0',
   },
 ]
 
@@ -142,7 +142,7 @@ const publish = function (param) {
   let paramObj = JSON.parse(param);
   for (let statute of statutes) {
     if (paramObj.ids.includes(statute.id)) {
-      statute.item6 = 1;
+      statute.item6 = '1';
     }
   }
   return {
@@ -157,7 +157,7 @@ const abolish = function (param) {
   let paramObj = JSON.parse(param);
   for (let statute of statutes) {
     if (paramObj.ids.includes(statute.id)) {
-      statute.item6 = 0;
+      statute.item6 = '0';
     }
   }
   return {

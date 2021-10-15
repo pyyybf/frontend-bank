@@ -53,8 +53,8 @@
             <el-col :span="8">
               <el-form-item label="状态">
                 <el-select v-model="queryForm.item6" placeholder="请选择状态" style="width:90%">
-                  <el-option label="已发布" :value="1"></el-option>
-                  <el-option label="未发布" :value="0"></el-option>
+                  <el-option label="已发布" value="1"></el-option>
+                  <el-option label="未发布" value="0"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -111,13 +111,16 @@
       <el-table-column
         label="外规内化状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.item7 ? 'success' : 'warning'">{{ scope.row.item7 ? '已内化' : '未内化' }}</el-tag>
+          <el-tag :type="scope.row.item7==='1' ? 'success' : 'warning'">{{
+              scope.row.item7 === '1' ? '已内化' : '未内化'
+            }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
         label="状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.item6 ? '' : 'info'">{{ scope.row.item6 ? '已发布' : '未发布' }}</el-tag>
+          <el-tag :type="scope.row.item6==='1' ? '' : 'info'">{{ scope.row.item6 === '1' ? '已发布' : '未发布' }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
