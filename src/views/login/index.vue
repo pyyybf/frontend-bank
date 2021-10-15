@@ -46,7 +46,7 @@ import {mapActions} from 'vuex'
 import login_bg from '@/assets/login_bg.png'
 import VerificationCode from '@/components/verificationCode'
 
-const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 export default {
   name: 'Login',
@@ -60,7 +60,7 @@ export default {
       },
       loginRules: {},
       loginLoading: false,
-      alphabet,
+      ALPHABET,
       verification: '',
       code: '',
     }
@@ -93,7 +93,7 @@ export default {
     changeCode() {
       this.code = '';
       for (let i = 0; i < 4; i++) {
-        this.code += this.alphabet[Math.floor(Math.random() * 62)];
+        this.code += this.ALPHABET[Math.floor(Math.random() * 62)];
       }
     },
     goRegister() {
