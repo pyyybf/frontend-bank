@@ -61,11 +61,6 @@ export default {
       username: localStorage.getItem('username'),
     }
   },
-  computed: {
-    ...mapGetters([
-      'username',
-    ]),
-  },
   methods: {
     ...mapActions([
       'logout',

@@ -1,18 +1,18 @@
 <template>
   <div>
-    <el-collapse>
+    <el-collapse value="1">
       <el-collapse-item name="1">
         <template slot="title">
           &nbsp;&nbsp;&nbsp;{{ `外规${this.$route.path === '/search' ? '查询' : ''}列表` }}
         </template>
         <el-form ref="queryForm" :model="queryForm" label-width="80px" size="small">
           <el-row>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.item1" style="width:90%"></el-input>
+                <el-input v-model="queryForm.item1" placeholder="请输入法规标题" style="width:90%"></el-input>
               </el-form-item>
             </el-col>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="效力级别">
                 <el-select v-model="queryForm.item2" placeholder="请选择效力级别" style="width:90%">
                   <el-option label="区域一" value="shanghai"></el-option>
@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="发布时间">
                 <el-date-picker style="width:90%"
                                 v-model="queryForm.item3"
@@ -31,7 +31,7 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="实施时间">
                 <el-date-picker style="width:90%"
                                 v-model="queryForm.item4"
@@ -42,20 +42,20 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-input v-model="queryForm.item5" style="width:90%"></el-input>
+                <el-input v-model="queryForm.item5" placeholder="请输入发文部门" style="width:90%"></el-input>
               </el-form-item>
             </el-col>
-            <el-col span="8">
+            <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.region" placeholder="请选择状态" style="width:90%">
+                <el-select v-model="queryForm.item6" placeholder="请选择状态" style="width:90%">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col span="8" offset="8">
+            <el-col :span="8" :offset="8">
               <el-form-item style="text-align: center">
                 <el-button type="primary" @click="onSearch">查询</el-button>
                 <el-button>重置</el-button>
@@ -106,45 +106,27 @@
       </el-table-column>
       <el-table-column
         label="外规内化状态">
-        <template slot-scope="scope">{{ scope.row.item7 ? '已内化' : '未内化' }}</template>
+        <template slot-scope="scope"><el-tag :type="scope.row.item7 ? 'success' : 'warning'">{{ scope.row.item7 ? '已内化' : '未内化' }}</el-tag></template>
       </el-table-column>
       <el-table-column
         label="状态">
-        <template slot-scope="scope">{{ scope.row.item6 ? '已发布' : '未发布' }}</template>
+        <template slot-scope="scope"><el-tag :type="scope.row.item6 ? '' : 'info'">{{ scope.row.item6 ? '已发布' : '未发布' }}</el-tag></template>
       </el-table-column>
     </el-table>
     <el-pagination
       background
       @current-change="handleCurrentChange"
       layout="total, prev, pager, next, jumper"
-      :page-size="1"
-      :total="2"
+      :current-page.sync="pageNum"
+      :page-size="10"
+      :total="total"
       style="text-align: right">
     </el-pagination>
   </div>
 </template>
 
 <script>
-const tableData = [
-  {
-    item1: '票据管理实施办法',
-    item2: '行政法规',
-    item3: '2013-01-05',
-    item4: '2013-01-02',
-    item5: '银监会',
-    item6: 1,
-    item7: 1,
-  },
-  {
-    item1: '中华人民共和国票据法',
-    item2: '法律',
-    item3: '2013-01-05',
-    item4: '2013-01-02',
-    item5: '人民银行',
-    item6: 0,
-    item7: 0,
-  },
-]
+import {mapActions} from "vuex";
 
 export default {
   name: "List",
@@ -157,16 +139,41 @@ export default {
         item4: '',
         item5: '',
         item6: '',
+        item7: '',
       },
-      tableData,
+      pageNum: 1,
+      total: 0,
+      tableData: [],
     }
   },
+  mounted() {
+    this.getStatuteList({
+      pageNum: this.pageNum,
+      ...this.queryForm
+    }).then(res => {
+      this.tableData = res.list;
+      this.total = res.total;
+    }).catch(err => {
+      this.$message.error(err);
+    })
+  },
   methods: {
+    ...mapActions([
+      'getStatuteList',
+    ]),
     onSearch() {
 
     },
     handleCurrentChange() {
-
+      this.getStatuteList({
+        pageNum: this.pageNum,
+        ...this.queryForm
+      }).then(res => {
+        this.tableData = res.list;
+        this.total = res.total;
+      }).catch(err => {
+        this.$message.error(err);
+      })
     },
   }
 }

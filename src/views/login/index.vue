@@ -13,8 +13,26 @@
           <el-input type="password" placeholder="密码" prefix-icon="el-icon-lock" v-model="loginForm.password"
                     autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item style="margin-bottom: 56px">
+        <el-form-item>
+          <el-row>
+            <el-col :span="8">
+              <el-input placeholder="验证码" prefix-icon="el-icon-circle-check" v-model="verification"
+                        autocomplete="off" class="verification-input" @keyup.enter.native="submitLoginForm"></el-input>
+            </el-col>
+            <el-col :span="12">
+              <VerificationCode :verificationCode="code"></VerificationCode>
+            </el-col>
+            <el-col :span="4">
+              <el-button type="text" size="small" @click="changeCode"><u>换一张<i
+                class="el-icon-refresh el-icon--right"></i></u></el-button>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 28px;text-align: center">
           <el-button type="primary" :loading="loginLoading" @click="submitLoginForm" class="login-submit-button">登录
+          </el-button>
+          <el-button type="text" @click="goRegister">
+            没有账号？前往注册
           </el-button>
         </el-form-item>
       </el-form>
@@ -26,9 +44,13 @@
 <script>
 import {mapActions} from 'vuex'
 import login_bg from '@/assets/login_bg.png'
+import VerificationCode from '@/components/verificationCode'
+
+const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 export default {
   name: 'Login',
+  components: {VerificationCode},
   data() {
     return {
       login_bg,
@@ -38,13 +60,26 @@ export default {
       },
       loginRules: {},
       loginLoading: false,
+      alphabet,
+      verification: '',
+      code: '',
     }
+  },
+  mounted() {
+    this.changeCode();
+  },
+  created(){
+    this.changeCode();
   },
   methods: {
     ...mapActions([
       'login',
     ]),
     submitLoginForm() {
+      if (this.code.toLowerCase() !== this.verification.toLowerCase()) {
+        this.$message.error('验证码错误');
+        return;
+      }
       this.loginLoading = true;
       this.login(this.loginForm).then(res => {
         this.loginLoading = false;
@@ -54,6 +89,15 @@ export default {
         this.$message.error(err);
         this.loginLoading = false;
       })
+    },
+    changeCode() {
+      this.code = '';
+      for (let i = 0; i < 4; i++) {
+        this.code += this.alphabet[Math.floor(Math.random() * 62)];
+      }
+    },
+    goRegister() {
+      this.$router.push({path: '/register'});
     },
   }
 }
@@ -66,7 +110,7 @@ export default {
   left: 0;
   right: 0;
   width: 360px;
-  margin: 140px auto;
+  margin: 120px auto;
   border-top: 10px solid #409EFF;
 }
 

@@ -1,5 +1,5 @@
 import {getToken, setToken, removeToken} from '@/utils/auth';
-import {loginAPI} from "@/api/user";
+import {loginAPI, registerAPI} from "@/api/user";
 
 const user = {
   state: {
@@ -39,6 +39,17 @@ const user = {
         localStorage.removeItem('username');
         resolve('登出成功');
       });
+    },
+    register({dispatch, commit}, data) {
+      return new Promise((resolve, reject) => {
+        registerAPI(data).then(response => {
+          if (response.data.success) {
+            resolve(response.data.message)
+          } else {
+            reject(response.data.message)
+          }
+        })
+      })
     },
   }
 };
