@@ -9,7 +9,7 @@ var accounts = [
   },
 ]
 var curId = 2;
-var data = [
+var statutes = [
   {
     id: 1,
     item1: '票据管理实施办法',
@@ -87,10 +87,12 @@ const register = function (param) {
 }
 
 const add = function (param) {
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
   curId++;
-  data.push({
+  statutes.push({
     id: curId,
-    ...param
+    ...paramObj
   })
   return {
     success: true,
@@ -100,7 +102,9 @@ const add = function (param) {
 }
 
 const del = function (param) {
-  data = data.filter(v => !param.includes(v));
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
+  statutes = statutes.filter(v => !paramObj.ids.includes(v.id));
   return {
     success: true,
     content: {},
@@ -109,7 +113,9 @@ const del = function (param) {
 }
 
 const update = function (param) {
-  data = data.map(v => v.id === param.id ? param : v);
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
+  statutes = statutes.map(v => v.id === paramObj.id ? param : v);
   return {
     success: true,
     content: {},
@@ -124,10 +130,40 @@ const get = function (param) {
   return {
     success: true,
     content: {
-      list: data.slice((paramObj.pageNum - 1) * 10, paramObj.pageNum * 10),
-      total: data.length
+      list: statutes.slice((paramObj.pageNum - 1) * 10, paramObj.pageNum * 10),
+      total: statutes.length
     },
     message: '获取成功'
+  }
+}
+
+const publish = function (param) {
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
+  for (let statute of statutes) {
+    if (paramObj.ids.includes(statute.id)) {
+      statute.item6 = 1;
+    }
+  }
+  return {
+    success: true,
+    content: {},
+    message: '发布成功'
+  }
+}
+
+const abolish = function (param) {
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
+  for (let statute of statutes) {
+    if (paramObj.ids.includes(statute.id)) {
+      statute.item6 = 0;
+    }
+  }
+  return {
+    success: true,
+    content: {},
+    message: '废止成功'
   }
 }
 
@@ -138,3 +174,5 @@ Mock.mock(RegExp('.*/api/statute/add'), 'post', add); // 增
 Mock.mock(RegExp('.*/api/statute/del'), 'delete', del); // 删
 Mock.mock(RegExp('.*/api/statute/update'), 'put', update); // 改
 Mock.mock(RegExp('.*/api/statute/get'), 'get', get); // 查
+Mock.mock(RegExp('.*/api/statute/publish'), 'put', publish); // 发布
+Mock.mock(RegExp('.*/api/statute/abolish'), 'put', abolish); // 废止
