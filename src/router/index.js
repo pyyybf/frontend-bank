@@ -5,6 +5,7 @@ import Login from '@/views/login'
 import Register from '@/views/register'
 import List from '@/views/list'
 import Home from '@/views/home'
+import Detail from '@/views/detail'
 
 Vue.use(Router)
 
@@ -24,21 +25,26 @@ export default new Router({
       path: '/',
       name: 'Layout',
       component: Layout,
-      children:[
+      children: [
         {
-          path:'/home',
-          name:'Home',
+          path: '/home',
+          name: 'Home',
           component: Home,
         },
         {
-          path:'/edit',
-          name:'List',
+          path: '/edit',
+          name: 'List',
           component: List,
         },
         {
-          path:'/search',
-          name:'List',
+          path: '/search',
+          name: 'List',
           component: List,
+        },
+        {
+          path: '/detail',
+          name: 'Detail',
+          component: Detail,
         },
       ]
     }

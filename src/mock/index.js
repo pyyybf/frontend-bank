@@ -12,23 +12,35 @@ var curId = 2;
 var statutes = [
   {
     id: 1,
-    item1: '票据管理实施办法',
-    item2: '行政法规',
-    item3: '2013-01-05',
-    item4: '2013-01-02',
-    item5: '银监会',
-    item6: '1',
-    item7: '1',
+    faguibiaoti: '票据管理实施办法',
+    faguiwenhao: '123456789',
+    waiguileibie: '外规类别1',
+    fawenbumen: '银监会',
+    xiaolidengji: '行政法规',
+    faburiqi: '2013-01-02',
+    shishiriqi: '2013-01-05',
+    jiedubumen: '解读部门1',
+    lururen: '录入人1',
+    lurushijian: '2021-10-18',
+    zhengwen: '正文1',
+    zhuangtai: '1',
+    waiguineihuazhuangtai: '1',
   },
   {
     id: 2,
-    item1: '中华人民共和国票据法',
-    item2: '法律',
-    item3: '2013-01-05',
-    item4: '2013-01-02',
-    item5: '人民银行',
-    item6: '0',
-    item7: '0',
+    faguibiaoti: '中华人民共和国票据法',
+    faguiwenhao: '00000000',
+    waiguileibie: '外规类别2',
+    fawenbumen: '人民银行',
+    xiaolidengji: '法律',
+    faburiqi: '2013-01-02',
+    shishiriqi: '2013-01-05',
+    jiedubumen: '解读部门2',
+    lururen: '录入人2',
+    lurushijian: '2021-10-18',
+    zhengwen: '正文2',
+    zhuangtai: '0',
+    waiguineihuazhuangtai: '0',
   },
 ]
 
@@ -142,7 +154,7 @@ const publish = function (param) {
   let paramObj = JSON.parse(param);
   for (let statute of statutes) {
     if (paramObj.ids.includes(statute.id)) {
-      statute.item6 = '1';
+      statute.zhuangtai = '1';
     }
   }
   return {
@@ -157,7 +169,7 @@ const abolish = function (param) {
   let paramObj = JSON.parse(param);
   for (let statute of statutes) {
     if (paramObj.ids.includes(statute.id)) {
-      statute.item6 = '0';
+      statute.zhuangtai = '0';
     }
   }
   return {
@@ -167,12 +179,32 @@ const abolish = function (param) {
   }
 }
 
+const getStatuteById = function (param) {
+  param = param.body || '';
+  let paramObj = JSON.parse(param);
+  for (let statute of statutes) {
+    if (paramObj.id == statute.id) {
+      return {
+        success: true,
+        content: statute,
+        message: '获取详情成功'
+      }
+    }
+  }
+  return {
+    success: false,
+    content: {},
+    message: '未查询到法规详情'
+  }
+}
+
 Mock.mock(RegExp('.*/api/user/login'), 'post', login); // 登录
 Mock.mock(RegExp('.*/api/user/register'), 'post', register); // 注册
 
 Mock.mock(RegExp('.*/api/statute/add'), 'post', add); // 增
 Mock.mock(RegExp('.*/api/statute/del'), 'delete', del); // 删
 Mock.mock(RegExp('.*/api/statute/update'), 'put', update); // 改
-Mock.mock(RegExp('.*/api/statute/get'), 'get', get); // 查
+Mock.mock(RegExp('.*/api/statute/get$'), 'get', get); // 查
 Mock.mock(RegExp('.*/api/statute/publish'), 'put', publish); // 发布
 Mock.mock(RegExp('.*/api/statute/abolish'), 'put', abolish); // 废止
+Mock.mock(RegExp('.*/api/statute/getStatuteById'), 'get', getStatuteById); // 根据id查询法规详情

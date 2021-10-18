@@ -51,3 +51,11 @@ export const abolishStatutesAPI = (data) => {
     data
   })
 }
+
+export const getStatuteByIdAPI = (data) => {
+  return HttpRequest.request({
+    url: `${api.statutePre}/getStatuteById`,
+    method: 'GET',
+    data
+  })
+}

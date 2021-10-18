@@ -4,7 +4,8 @@ import {
   updateStatuteByIdAPI,
   getAPI,
   publishStatutesAPI,
-  abolishStatutesAPI
+  abolishStatutesAPI,
+  getStatuteByIdAPI,
 } from "@/api/statute";
 
 const user = {
@@ -74,6 +75,17 @@ const user = {
         abolishStatutesAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
+          } else {
+            reject(response.data.message);
+          }
+        })
+      })
+    },
+    getStatuteById({},data) {
+      return new Promise((resolve, reject) => {
+        getStatuteByIdAPI(data).then(response => {
+          if (response.data.success) {
+            resolve(response.data.content);
           } else {
             reject(response.data.message);
           }

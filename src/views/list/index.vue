@@ -9,12 +9,12 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.item1" placeholder="请输入法规标题" style="width:90%"></el-input>
+                <el-input v-model="queryForm.faguibiaoti" placeholder="请输入法规标题" style="width:90%"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力级别">
-                <el-select v-model="queryForm.item2" placeholder="请选择效力级别" style="width:90%">
+                <el-select v-model="queryForm.xiaolidengji" placeholder="请选择效力级别" style="width:90%">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -23,7 +23,7 @@
             <el-col :span="8">
               <el-form-item label="发布时间">
                 <el-date-picker style="width:90%"
-                                v-model="queryForm.item3"
+                                v-model="queryForm.faburiqi"
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
@@ -34,7 +34,7 @@
             <el-col :span="8">
               <el-form-item label="实施时间">
                 <el-date-picker style="width:90%"
-                                v-model="queryForm.item4"
+                                v-model="queryForm.shishiriqi"
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
@@ -44,7 +44,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-select v-model="queryForm.item5" placeholder="请选择发文部门" style="width:90%">
+                <el-select v-model="queryForm.fawenbumen" placeholder="请选择发文部门" style="width:90%">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -52,7 +52,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.item6" placeholder="请选择状态" style="width:90%">
+                <el-select v-model="queryForm.zhuangtai" placeholder="请选择状态" style="width:90%">
                   <el-option label="已发布" value="1"></el-option>
                   <el-option label="未发布" value="0"></el-option>
                 </el-select>
@@ -74,6 +74,8 @@
       <el-button size="small" @click="del">删除</el-button>
       <el-button size="small" @click="publish">发布</el-button>
       <el-button size="small" @click="abolish">废止</el-button>
+      <el-button size="small" @click="">外规内化</el-button>
+      <el-button size="small" @click="">外规内化结果</el-button>
     </div>
     <el-table
       ref="multipleTable"
@@ -88,31 +90,31 @@
       </el-table-column>
       <el-table-column
         label="法规标题">
-        <template slot-scope="scope">《{{ scope.row.item1 }}》</template>
+        <template slot-scope="scope">《{{ scope.row.faguibiaoti }}》</template>
       </el-table-column>
       <el-table-column
-        prop="item5"
+        prop="fawenbumen"
         label="发文机构">
       </el-table-column>
       <el-table-column
-        prop="item3"
+        prop="faburiqi"
         label="发布日期"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="item4"
+        prop="shishiriqi"
         label="实施日期"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="item2"
+        prop="xiaolidengji"
         label="效力级别">
       </el-table-column>
       <el-table-column
         label="外规内化状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.item7==='1' ? 'success' : 'warning'">{{
-              scope.row.item7 === '1' ? '已内化' : '未内化'
+          <el-tag :type="scope.row.waiguineihuazhuangtai==='1' ? 'success' : 'warning'">{{
+              scope.row.waiguineihuazhuangtai === '1' ? '已内化' : '未内化'
             }}
           </el-tag>
         </template>
@@ -120,7 +122,7 @@
       <el-table-column
         label="状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.item6==='1' ? '' : 'info'">{{ scope.row.item6 === '1' ? '已发布' : '未发布' }}</el-tag>
+          <el-tag :type="scope.row.zhuangtai==='1' ? '' : 'info'">{{ scope.row.zhuangtai === '1' ? '已发布' : '未发布' }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -144,13 +146,19 @@ export default {
   data() {
     return {
       queryForm: {
-        item1: '',
-        item2: '',
-        item3: '',
-        item4: '',
-        item5: '',
-        item6: '',
-        item7: '',
+        faguibiaoti: '',
+        faguiwenhao: '',
+        waiguileibie: '',
+        fawenbumen: '',
+        xiaolidengji: '',
+        faburiqi: '',
+        shishiriqi: '',
+        jiedubumen: '',
+        lururen: '',
+        lurushijian: '',
+        zhengwen: '',
+        zhuangtai: '',
+        waiguineihuazhuangtai: '',
       },
       pageNum: 1,
       total: 0,
@@ -197,7 +205,7 @@ export default {
       })
     },
     add() {
-
+      this.$router.push({path: '/detail', query: {statuteId: -1}});
     },
     del() {
       if (this.ids.length > 0) {
@@ -207,15 +215,17 @@ export default {
         }).catch(err => {
           this.$message.error(err);
         })
+      } else {
+        this.$message.warning('请选择要删除的法规');
       }
     },
     edit() {
       if (this.ids.length === 0) {
-        this.$message.error('请选择要修改的法规');
+        this.$message.warning('请选择要修改的法规');
       } else if (this.ids.length > 1) {
-        this.$message.error('只能选择一条法规进行修改');
+        this.$message.warning('只能选择一条法规进行修改');
       } else {
-        //TODO: 修改
+        this.$router.push({path: '/detail', query: {statuteId: this.ids[0]}});
       }
     },
     publish() {
@@ -226,6 +236,8 @@ export default {
         }).catch(err => {
           this.$message.error(err);
         })
+      } else {
+        this.$message.warning('请选择要发布的法规');
       }
     },
     abolish() {
@@ -236,6 +248,8 @@ export default {
         }).catch(err => {
           this.$message.error(err);
         })
+      } else {
+        this.$message.warning('请选择要废止的法规');
       }
     },
   }
