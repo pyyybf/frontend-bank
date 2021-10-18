@@ -2,20 +2,21 @@
   <div>
     <el-page-header @back="goBack" :content="(this.id>0?'修改':'新建')+'法规'">
     </el-page-header>
-    <el-form ref="statuteForm" :model="statuteForm" label-width="80px" size="medium" class="statute-form">
+    <el-form ref="statuteForm" :model="statuteForm" :rules="statuteRules" label-width="80px" size="medium"
+             class="statute-form">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="法规标题">
+          <el-form-item label="法规标题" prop="faguibiaoti">
             <el-input v-model="statuteForm.faguibiaoti" placeholder="请输入法规标题" style="width:90%"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发文文号">
+          <el-form-item label="发文文号" prop="faguiwenhao">
             <el-input v-model="statuteForm.faguiwenhao" placeholder="请输入法规标题" style="width:90%"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发文部门">
+          <el-form-item label="发文部门" prop="fawenbumen">
             <el-select v-model="statuteForm.fawenbumen" placeholder="请选择发文部门" style="width:90%">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
@@ -23,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="效力级别">
+          <el-form-item label="效力级别" prop="xiaolidengji">
             <el-select v-model="statuteForm.xiaolidengji" placeholder="请选择效力级别" style="width:90%">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
@@ -31,7 +32,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发布日期">
+          <el-form-item label="发布日期" prop="faburiqi">
             <el-date-picker style="width:90%"
                             v-model="statuteForm.faburiqi"
                             type="date"
@@ -40,7 +41,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="实施日期">
+          <el-form-item label="实施日期" prop="shishiriqi">
             <el-date-picker style="width:90%"
                             v-model="statuteForm.shishiriqi"
                             type="date"
@@ -49,7 +50,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="外规类别">
+          <el-form-item label="外规类别" prop="waiguileibie">
             <el-select v-model="statuteForm.waiguileibie" placeholder="请选择外规类别" style="width:90%">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
@@ -59,7 +60,7 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="解读部门">
+          <el-form-item label="解读部门" prop="jiedubumen">
             <el-select v-model="statuteForm.jiedubumen" placeholder="请选择解读部门" style="width:90%">
               <el-option label="已发布" value="1"></el-option>
               <el-option label="未发布" value="0"></el-option>
@@ -77,7 +78,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="正文" style="text-align: left">
+          <el-form-item label="正文" prop="zhengwen" style="text-align: left">
             <el-upload
               action=""
               :on-preview="handlePreview"
@@ -102,7 +103,7 @@
     <el-divider></el-divider>
     <el-descriptions class="margin-top" size="medium">
       <template slot="title">
-        &nbsp;&nbsp;{{'附件管理'}}
+        &nbsp;&nbsp;{{ '附件管理' }}
       </template>
       <template slot="extra">
         <el-button type="primary" size="small">添加附件</el-button>
@@ -172,6 +173,73 @@ export default {
         size: 23,
         creator: '超级管理员',
       }],
+      statuteRules: {
+        faguibiaoti: [{
+          required: true,
+          message:'请输入法规标题',
+          trigger: 'blur',
+        }],
+        faguiwenhao: [{
+          required: false,
+          message:'请输入发文文号',
+          trigger: 'blur',
+        }],
+        waiguileibie: [{
+          required: true,
+          message:'请选择外规类别',
+          trigger: 'blur',
+        }],
+        fawenbumen: [{
+          required: true,
+          message:'请选择发文部门',
+          trigger: 'blur',
+        }],
+        xiaolidengji: [{
+          required: true,
+          message:'请选择效力等级',
+          trigger: 'blur',
+        }],
+        faburiqi: [{
+          required: true,
+          message:'请选择发布日期',
+          trigger: 'blur',
+        }],
+        shishiriqi: [{
+          required: true,
+          message:'请选择实施日期',
+          trigger: 'blur',
+        }],
+        jiedubumen: [{
+          required: false,
+          message:'请选择解读部门',
+          trigger: 'blur',
+        }],
+        lururen: [{
+          required: true,
+          message:'请输入录入人',
+          trigger: 'blur',
+        }],
+        lurushijian: [{
+          required: true,
+          message:'请选择录入时间',
+          trigger: 'blur',
+        }],
+        zhengwen: [{
+          required: false,
+          message:'请上传正文',
+          trigger: 'blur',
+        }],
+        zhuangtai: [{
+          required: true,
+          message:'请选择状态',
+          trigger: 'blur',
+        }],
+        waiguineihuazhuangtai: [{
+          required: true,
+          message:'请输入外规内化状态',
+          trigger: 'blur',
+        }],
+      }
     }
   },
   created() {
