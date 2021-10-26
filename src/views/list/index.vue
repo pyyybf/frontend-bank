@@ -3,27 +3,29 @@
     <el-collapse value="1">
       <el-collapse-item name="1">
         <template slot="title">
-          &nbsp;&nbsp;&nbsp;{{ `外规${this.$route.path === '/search' ? '查询' : ''}列表` }}
+          &nbsp;&nbsp;&nbsp;外规查询列表
         </template>
         <el-form ref="queryForm" :model="queryForm" label-width="80px" size="small">
           <el-row>
             <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.faguibiaoti" placeholder="请输入法规标题" style="width:90%"></el-input>
+                <el-input v-model="queryForm.title" placeholder="请输入法规标题" style="width:90%"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="效力级别">
-                <el-select v-model="queryForm.xiaolidengji" placeholder="请选择效力级别" style="width:90%">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+              <el-form-item label="效力等级">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" style="width:90%">
+                  <el-option label="行政法规" value="1"></el-option>
+                  <el-option label="部门规章" value="2"></el-option>
+                  <el-option label="规范性文件" value="3"></el-option>
+                  <el-option label="其他文件" value="4"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="发布时间">
                 <el-date-picker style="width:90%"
-                                v-model="queryForm.faburiqi"
+                                v-model="queryForm.release_time"
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
@@ -34,7 +36,7 @@
             <el-col :span="8">
               <el-form-item label="实施时间">
                 <el-date-picker style="width:90%"
-                                v-model="queryForm.shishiriqi"
+                                v-model="queryForm.implement_time"
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
@@ -44,7 +46,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-select v-model="queryForm.fawenbumen" placeholder="请选择发文部门" style="width:90%">
+                <el-select v-model="queryForm.department" placeholder="请选择发文部门" style="width:90%">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -52,9 +54,9 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.zhuangtai" placeholder="请选择状态" style="width:90%">
-                  <el-option label="已发布" value="1"></el-option>
-                  <el-option label="未发布" value="0"></el-option>
+                <el-select v-model="queryForm.status" placeholder="请选择状态" style="width:90%">
+                  <el-option label="已发布" :value="true"></el-option>
+                  <el-option label="未发布" :value="false"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -68,61 +70,47 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <div v-if="this.$route.path === '/edit'" class="actions">
-      <el-button size="small" @click="add">新建</el-button>
-      <el-button size="small" @click="edit">修改</el-button>
-      <el-button size="small" @click="del">删除</el-button>
-      <el-button size="small" @click="publish">发布</el-button>
-      <el-button size="small" @click="abolish">废止</el-button>
-      <el-button size="small" @click="">外规内化</el-button>
-      <el-button size="small" @click="">外规内化结果</el-button>
-    </div>
     <el-table
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
-      style="width: 100%;margin-top: 10px"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        v-if="this.$route.path === '/edit'"
-        type="selection"
-        width="55">
-      </el-table-column>
+      style="width: 100%;margin-top: 10px">
       <el-table-column
         label="法规标题">
-        <template slot-scope="scope">《{{ scope.row.faguibiaoti }}》</template>
+        <template slot-scope="scope">{{ scope.row.title }}</template>
       </el-table-column>
       <el-table-column
-        prop="fawenbumen"
+        prop="department"
         label="发文机构">
       </el-table-column>
       <el-table-column
-        prop="faburiqi"
+        prop="release_time"
         label="发布日期"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="shishiriqi"
+        prop="implement_time"
         label="实施日期"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="xiaolidengji"
-        label="效力级别">
+        prop="grade"
+        label="效力等级">
       </el-table-column>
+      <!--      <el-table-column-->
+      <!--        label="外规内化状态">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-tag :type="scope.row.waiguineihuazhuangtai==='1' ? 'success' : 'warning'">{{-->
+      <!--              scope.row.waiguineihuazhuangtai === '1' ? '已内化' : '未内化'-->
+      <!--            }}-->
+      <!--          </el-tag>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column
-        label="外规内化状态">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.waiguineihuazhuangtai==='1' ? 'success' : 'warning'">{{
-              scope.row.waiguineihuazhuangtai === '1' ? '已内化' : '未内化'
-            }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
+        prop="statue"
         label="状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.zhuangtai==='1' ? '' : 'info'">{{ scope.row.zhuangtai === '1' ? '已发布' : '未发布' }}</el-tag>
+          <el-tag :type="scope.row.status ? 'success' : 'warning'">{{ scope.row.status ? '已发布' : '未发布' }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -146,19 +134,19 @@ export default {
   data() {
     return {
       queryForm: {
-        faguibiaoti: '',
-        faguiwenhao: '',
-        waiguileibie: '',
-        fawenbumen: '',
-        xiaolidengji: '',
-        faburiqi: '',
-        shishiriqi: '',
-        jiedubumen: '',
-        lururen: '',
-        lurushijian: '',
-        zhengwen: '',
-        zhuangtai: '',
-        waiguineihuazhuangtai: '',
+        title: '',
+        number: '',
+        category: '',
+        department: '',
+        grade: '',
+        release_time: '',
+        implement_time: '',
+        interpret_department: '',
+        input_user: '',
+        input_time: '',
+        content: '',
+        status: '',
+        // waiguineihuazhuangtai: '',
       },
       pageNum: 1,
       total: 0,
@@ -171,19 +159,13 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getStatuteList',
-      'delStatutes',
-      'publishStatutes',
-      'abolishStatutes',
+      'getPaperList',
+      'delPapers',
+      'publishPapers',
+      'abolishPapers',
     ]),
-    handleSelectionChange(val) {
-      this.ids = [];
-      for (let v of val) {
-        this.ids.push(v.id);
-      }
-    },
     onSearch() {
-      this.getStatuteList({
+      this.getPaperList({
         pageNum: this.pageNum,
         ...this.queryForm
       }).then(res => {
@@ -194,7 +176,7 @@ export default {
       })
     },
     handleCurrentChange() {
-      this.getStatuteList({
+      this.getPaperList({
         pageNum: this.pageNum,
         ...this.queryForm
       }).then(res => {
@@ -204,64 +186,9 @@ export default {
         this.$message.error(err);
       })
     },
-    add() {
-      this.$router.push({path: '/detail', query: {statuteId: -1}});
-    },
-    del() {
-      if (this.ids.length > 0) {
-        this.delStatutes({ids: this.ids}).then(res => {
-          this.$message.success(res);
-          this.onSearch();
-        }).catch(err => {
-          this.$message.error(err);
-        })
-      } else {
-        this.$message.warning('请选择要删除的法规');
-      }
-    },
-    edit() {
-      if (this.ids.length === 0) {
-        this.$message.warning('请选择要修改的法规');
-      } else if (this.ids.length > 1) {
-        this.$message.warning('只能选择一条法规进行修改');
-      } else {
-        this.$router.push({path: '/detail', query: {statuteId: this.ids[0]}});
-      }
-    },
-    publish() {
-      if (this.ids.length > 0) {
-        this.publishStatutes({ids: this.ids}).then(res => {
-          this.$message.success(res);
-          this.onSearch();
-        }).catch(err => {
-          this.$message.error(err);
-        })
-      } else {
-        this.$message.warning('请选择要发布的法规');
-      }
-    },
-    abolish() {
-      if (this.ids.length > 0) {
-        this.abolishStatutes({ids: this.ids}).then(res => {
-          this.$message.success(res);
-          this.onSearch();
-        }).catch(err => {
-          this.$message.error(err);
-        })
-      } else {
-        this.$message.warning('请选择要废止的法规');
-      }
-    },
   }
 }
 </script>
-
-<style scoped>
-.actions {
-  text-align: left;
-  margin-top: 10px;
-}
-</style>
 
 <style>
 .el-collapse-item__content {

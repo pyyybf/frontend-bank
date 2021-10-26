@@ -7,7 +7,8 @@ import store from './store'
 import mock from './mock'
 
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-chalk/index.css';
+import './theme/index.css';
 
 Vue.config.productionTip = false
 

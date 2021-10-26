@@ -6,6 +6,7 @@ import Register from '@/views/register'
 import List from '@/views/list'
 import Home from '@/views/home'
 import Detail from '@/views/detail'
+import Manage from '@/views/manage'
 
 Vue.use(Router)
 
@@ -33,8 +34,8 @@ export default new Router({
         },
         {
           path: '/edit',
-          name: 'List',
-          component: List,
+          name: 'Manage',
+          component: Manage,
         },
         {
           path: '/search',

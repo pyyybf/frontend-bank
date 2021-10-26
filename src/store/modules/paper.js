@@ -1,18 +1,18 @@
 import {
-  addStatuteAPI,
-  delStatutesAPI,
-  updateStatuteByIdAPI,
+  addPaperAPI,
+  delPapersAPI,
+  updatePaperByIdAPI,
   getAPI,
-  publishStatutesAPI,
-  abolishStatutesAPI,
-  getStatuteByIdAPI,
-} from "@/api/statute";
+  publishPapersAPI,
+  abolishPapersAPI,
+  getPaperByIdAPI,
+} from "@/api/paper";
 
 const user = {
   state: {},
   mutations: {},
   actions: {
-    getStatuteList({},data) {
+    getPaperList({}, data) {
       // console.log(data)
       return new Promise((resolve, reject) => {
         getAPI(data).then(response => {
@@ -26,9 +26,9 @@ const user = {
         })
       });
     },
-    addStatute({},data) {
+    addPaper({}, data) {
       return new Promise((resolve, reject) => {
-        addStatuteAPI(data).then(response => {
+        addPaperAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
           } else {
@@ -37,9 +37,9 @@ const user = {
         })
       })
     },
-    delStatutes({},data) {
+    delPapers({}, data) {
       return new Promise((resolve, reject) => {
-        delStatutesAPI(data).then(response => {
+        delPapersAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
           } else {
@@ -48,9 +48,9 @@ const user = {
         })
       })
     },
-    updateStatuteById({},data) {
+    updatePaperById({}, data) {
       return new Promise((resolve, reject) => {
-        updateStatuteByIdAPI(data).then(response => {
+        updatePaperByIdAPI(data.id, data.paperForm).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
           } else {
@@ -59,9 +59,9 @@ const user = {
         })
       })
     },
-    publishStatutes({},data) {
+    publishPapers({}, data) {
       return new Promise((resolve, reject) => {
-        publishStatutesAPI(data).then(response => {
+        publishPapersAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
           } else {
@@ -70,9 +70,9 @@ const user = {
         })
       })
     },
-    abolishStatutes({},data) {
+    abolishPapers({}, data) {
       return new Promise((resolve, reject) => {
-        abolishStatutesAPI(data).then(response => {
+        abolishPapersAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.message);
           } else {
@@ -81,9 +81,9 @@ const user = {
         })
       })
     },
-    getStatuteById({},data) {
+    getPaperById({}, data) {
       return new Promise((resolve, reject) => {
-        getStatuteByIdAPI(data).then(response => {
+        getPaperByIdAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.content);
           } else {

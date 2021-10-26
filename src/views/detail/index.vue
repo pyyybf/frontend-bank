@@ -2,56 +2,58 @@
   <div>
     <el-page-header @back="goBack" :content="(this.id>0?'修改':'新建')+'法规'">
     </el-page-header>
-    <el-form ref="statuteForm" :model="statuteForm" :rules="statuteRules" label-width="80px" size="medium"
-             class="statute-form">
+    <el-form ref="paperForm" :model="paperForm" :rules="paperRules" label-width="80px" size="medium"
+             class="paper-form">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="法规标题" prop="faguibiaoti">
-            <el-input v-model="statuteForm.faguibiaoti" placeholder="请输入法规标题" style="width:90%"></el-input>
+          <el-form-item label="法规标题" prop="title">
+            <el-input v-model="paperForm.title" placeholder="请输入法规标题" style="width:95%;float: left"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发文文号" prop="faguiwenhao">
-            <el-input v-model="statuteForm.faguiwenhao" placeholder="请输入法规标题" style="width:90%"></el-input>
+          <el-form-item label="发文文号" prop="number">
+            <el-input v-model="paperForm.number" placeholder="请输入发文文号" style="width:95%;float: left"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发文部门" prop="fawenbumen">
-            <el-select v-model="statuteForm.fawenbumen" placeholder="请选择发文部门" style="width:90%">
+          <el-form-item label="发文部门" prop="department">
+            <el-select v-model="paperForm.department" placeholder="请选择发文部门" style="width:95%;float: left">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="效力级别" prop="xiaolidengji">
-            <el-select v-model="statuteForm.xiaolidengji" placeholder="请选择效力级别" style="width:90%">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="效力等级" prop="grade">
+            <el-select v-model="paperForm.grade" placeholder="请选择效力等级" style="width:95%;float: left">
+              <el-option label="行政法规" value="1"></el-option>
+              <el-option label="部门规章" value="2"></el-option>
+              <el-option label="规范性文件" value="3"></el-option>
+              <el-option label="其他文件" value="4"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发布日期" prop="faburiqi">
-            <el-date-picker style="width:90%"
-                            v-model="statuteForm.faburiqi"
+          <el-form-item label="发布日期" prop="release_time">
+            <el-date-picker style="width:95%;float: left"
+                            v-model="paperForm.release_time"
                             type="date"
                             placeholder="选择发布日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="实施日期" prop="shishiriqi">
-            <el-date-picker style="width:90%"
-                            v-model="statuteForm.shishiriqi"
+          <el-form-item label="实施日期" prop="implement_time">
+            <el-date-picker style="width:95%;float: left"
+                            v-model="paperForm.implement_time"
                             type="date"
                             placeholder="选择实施日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="外规类别" prop="waiguileibie">
-            <el-select v-model="statuteForm.waiguileibie" placeholder="请选择外规类别" style="width:90%">
+          <el-form-item label="外规类别" prop="category">
+            <el-select v-model="paperForm.category" placeholder="请选择外规类别" style="width:95%;float: left">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -60,25 +62,36 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="解读部门" prop="jiedubumen">
-            <el-select v-model="statuteForm.jiedubumen" placeholder="请选择解读部门" style="width:90%">
-              <el-option label="已发布" value="1"></el-option>
-              <el-option label="未发布" value="0"></el-option>
+          <el-form-item label="解读部门" prop="interpret_department">
+            <!--            <el-select v-model="paperForm.interpret_department" placeholder="请选择解读部门" style="width:95%;float: left">-->
+            <!--              <el-option label="已发布" value="1"></el-option>-->
+            <!--              <el-option label="未发布" value="0"></el-option>-->
+            <!--            </el-select>-->
+            <el-select v-model="paperForm.interpret_department" multiple placeholder="请选择解读部门"
+                       style="width:95%;float: left">
+              <el-option
+                v-for="item in interpretDepartmentOptions"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
-          <el-form-item label="摘要">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              v-model="statuteForm.zhaiyao"
-              style="width: 95.5%">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="正文" prop="zhengwen" style="text-align: left">
+        <!--        <el-col :span="24">-->
+        <!--          <el-form-item label="摘要">-->
+        <!--            <el-input-->
+        <!--              type="textarea"-->
+        <!--              :autosize="{ minRows: 2, maxRows: 4}"-->
+        <!--              v-model="paperForm.zhaiyao"-->
+        <!--              style="width: 100%;float: left">-->
+        <!--            </el-input>-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="正文" prop="content" style="text-align: left">
             <el-upload
               action=""
               :on-preview="handlePreview"
@@ -87,7 +100,7 @@
               :limit="1"
               :on-exceed="handleExceed"
               :file-list="fileList"
-              style="margin-left: 2.25%;width: 95.5%">
+              style="width: 95%;float: left">
               <el-button size="small" type="primary" style="float: left">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -149,20 +162,20 @@ export default {
   data() {
     return {
       id: 0,
-      statuteForm: {
-        faguibiaoti: '',
-        faguiwenhao: '',
-        waiguileibie: '',
-        fawenbumen: '',
-        xiaolidengji: '',
-        faburiqi: '',
-        shishiriqi: '',
-        jiedubumen: '',
-        lururen: '',
-        lurushijian: '',
-        zhengwen: '',
-        zhuangtai: '',
-        waiguineihuazhuangtai: '',
+      paperForm: {
+        title: '',
+        number: '',
+        category: '',
+        department: '',
+        grade: '',
+        release_time: '',
+        implement_time: '',
+        interpret_department: [],
+        input_user: '',
+        input_time: '',
+        content: '',
+        status: '',
+        // waiguineihuazhuangtai: '',
       },
       fileList: [{
         name: 'food.jpeg',
@@ -173,118 +186,135 @@ export default {
         size: 23,
         creator: '超级管理员',
       }],
-      statuteRules: {
-        faguibiaoti: [{
+      paperRules: {
+        title: [{
           required: true,
-          message:'请输入法规标题',
+          message: '请输入法规标题',
           trigger: 'blur',
         }],
-        faguiwenhao: [{
+        number: [{
           required: false,
-          message:'请输入发文文号',
+          message: '请输入发文文号',
           trigger: 'blur',
         }],
-        waiguileibie: [{
+        category: [{
           required: true,
-          message:'请选择外规类别',
+          message: '请选择外规类别',
           trigger: 'blur',
         }],
-        fawenbumen: [{
+        department: [{
           required: true,
-          message:'请选择发文部门',
+          message: '请选择发文部门',
           trigger: 'blur',
         }],
-        xiaolidengji: [{
+        grade: [{
           required: true,
-          message:'请选择效力等级',
+          message: '请选择效力等级',
           trigger: 'blur',
         }],
-        faburiqi: [{
+        release_time: [{
           required: true,
-          message:'请选择发布日期',
+          message: '请选择发布日期',
           trigger: 'blur',
         }],
-        shishiriqi: [{
+        implement_time: [{
           required: true,
-          message:'请选择实施日期',
+          message: '请选择实施日期',
           trigger: 'blur',
         }],
-        jiedubumen: [{
+        interpret_department: [{
           required: false,
-          message:'请选择解读部门',
+          message: '请选择解读部门',
           trigger: 'blur',
         }],
-        lururen: [{
+        input_user: [{
           required: true,
-          message:'请输入录入人',
+          message: '请输入录入人',
           trigger: 'blur',
         }],
-        lurushijian: [{
+        input_time: [{
           required: true,
-          message:'请选择录入时间',
+          message: '请选择录入时间',
           trigger: 'blur',
         }],
-        zhengwen: [{
-          required: false,
-          message:'请上传正文',
-          trigger: 'blur',
-        }],
-        zhuangtai: [{
+        content: [{
           required: true,
-          message:'请选择状态',
+          message: '请上传正文',
           trigger: 'blur',
         }],
-        waiguineihuazhuangtai: [{
+        status: [{
           required: true,
-          message:'请输入外规内化状态',
+          message: '请选择状态',
           trigger: 'blur',
         }],
-      }
+        // waiguineihuazhuangtai: [{
+        //   required: true,
+        //   message:'请输入外规内化状态',
+        //   trigger: 'blur',
+        // }],
+      },
+      interpretDepartmentOptions: [
+        {
+          value: '合规部'
+        },
+        {
+          value: '风险部'
+        },
+        {
+          value: '信用卡部'
+        },
+      ]
     }
   },
   created() {
-    if (this.$route.query.statuteId > 0) {
-      this.id = this.$route.query.statuteId;
+    if (this.$route.query.paperId > 0) {
+      this.id = this.$route.query.paperId;
     } else {
       this.id = -1;
     }
   },
   mounted() {
-    if (this.$route.query.statuteId > 0) {
-      this.getStatuteById({id: this.$route.query.statuteId}).then(res => {
-        this.statuteForm = res;
+    if (this.$route.query.paperId > 0) {
+      this.getPaperById(this.$route.query.paperId).then(res => {
+        this.paperForm = {
+          ...res,
+          interpret_department: res.interpret_department.split(',')
+        };
       }).catch(err => {
         this.$message.error(err);
       })
     }
   },
   watch: {
-    '$route.query.statuteId'(val) {
+    '$route.query.paperId'(val) {
       if (this.$route.path.includes('detail')) {
-        console.log(val)
+        // console.log(val)
         if (val > 0) {
-          this.id = this.$route.query.statuteId;
-          this.getStatuteById({id: this.id}).then(res => {
-            this.statuteForm = res;
+          this.id = this.$route.query.paperId;
+          this.getPaperById(this.id).then(res => {
+            this.paperForm = {
+              ...res,
+              interpret_department: res.interpret_department.split(',')
+            };
           }).catch(err => {
             this.$message.error(err);
           })
         } else {
           this.id = -1;
-          this.statuteForm = {
-            faguibiaoti: '',
-            faguiwenhao: '',
-            waiguileibie: '',
-            fawenbumen: '',
-            xiaolidengji: '',
-            faburiqi: '',
-            shishiriqi: '',
-            jiedubumen: '',
-            lururen: '',
-            lurushijian: '',
-            zhengwen: '',
-            zhuangtai: '',
-            waiguineihuazhuangtai: '',
+          this.paperForm = {
+            title: '',
+            number: '',
+            category: '',
+            department: '',
+            grade: '',
+            release_time: '',
+            implement_time: '',
+            interpret_department: [],
+            input_user: '',
+            input_time: '',
+            content: '',
+            status: '',
+            // waiguineihuazhuangtai: '',
           };
         }
       }
@@ -292,7 +322,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getStatuteById',
+      'getPaperById',
     ]),
     goBack() {
       this.$router.push({path: '/edit'});
@@ -308,13 +338,16 @@ export default {
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
-    }
+    },
+    save() {
+
+    },
   },
 }
 </script>
 
 <style scoped>
-.statute-form {
+.paper-form {
   margin-top: 20px;
 }
 </style>

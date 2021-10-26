@@ -47,6 +47,7 @@ import login_bg from '@/assets/login_bg.png'
 import VerificationCode from '@/components/verificationCode'
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+const sha256 = require("js-sha256").sha256;
 
 export default {
   name: 'Login',
@@ -68,7 +69,7 @@ export default {
   mounted() {
     this.changeCode();
   },
-  created(){
+  created() {
     this.changeCode();
   },
   methods: {
@@ -76,12 +77,17 @@ export default {
       'login',
     ]),
     submitLoginForm() {
+      console.log(sha256(this.loginForm.password))
       if (this.code.toLowerCase() !== this.verification.toLowerCase()) {
         this.$message.error('验证码错误');
         return;
       }
+      console.log(sha256(this.loginForm.password))
       this.loginLoading = true;
-      this.login(this.loginForm).then(res => {
+      this.login({
+        ...this.loginForm,
+        password: sha256(this.loginForm.password)
+      }).then(res => {
         this.loginLoading = false;
         this.$message.success(res);
         this.$router.push({path: '/home'});
@@ -111,11 +117,11 @@ export default {
   right: 0;
   width: 360px;
   margin: 120px auto;
-  border-top: 10px solid #409EFF;
+  border-top: 10px solid #012d54;
 }
 
 .login-center-layout {
-  background: #409EFF;
+  background: #012d54;
   width: auto;
   height: auto;
   max-width: 100%;
@@ -125,15 +131,15 @@ export default {
 
 .login-logo {
   text-align: center;
-  color: #409EFF;
+  color: #012d54;
   font-size: 56px;
   padding: 0;
 }
 
 .login-title {
   text-align: center;
-  color: #409EFF;
-  font-family: 幼圆;
+  color: #012d54;
+  /*font-family: 幼圆;*/
   margin-top: 12px;
 }
 
@@ -143,6 +149,6 @@ export default {
 </style>
 <style>
 .el-input__icon {
-  color: #409EFF;
+  color: #012d54;
 }
 </style>
