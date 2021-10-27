@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import mock from './mock'
 
 import ElementUI from 'element-ui';
 // import 'element-ui/lib/theme-chalk/index.css';
@@ -15,13 +14,13 @@ import './permission'; // permission control
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
+process.env.MOCK && require('./mock');
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
-  mock,
   components: {App},
   template: '<App/>'
 })
