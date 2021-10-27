@@ -66,7 +66,7 @@ export default {
       'logout',
     ]),
     handleLogout() {
-      this.logout().then(res => {
+      this.logout(localStorage.getItem('userId')).then(res => {
         this.$message.success(res);
         this.$router.push({path: '/login'});
       })

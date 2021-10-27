@@ -19,3 +19,10 @@ export const registerAPI = (data) => {
     data
   })
 }
+
+export const logoutAPI = (id) => {
+  return HttpRequest.request({
+    url: `${api.userPre}/logout/${id}`,
+    method: 'POST',
+  })
+}

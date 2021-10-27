@@ -77,12 +77,10 @@ export default {
       'login',
     ]),
     submitLoginForm() {
-      console.log(sha256(this.loginForm.password))
       if (this.code.toLowerCase() !== this.verification.toLowerCase()) {
         this.$message.error('验证码错误');
         return;
       }
-      console.log(sha256(this.loginForm.password))
       this.loginLoading = true;
       this.login({
         ...this.loginForm,

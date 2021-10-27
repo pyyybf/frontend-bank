@@ -4,6 +4,7 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
 
 var accounts = [
   {
+    id: 1,
     username: 'panyue',
     password: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'
   },
@@ -44,13 +45,13 @@ var papers = [
   },
 ]
 
-function randomToken() {
-  var token = '';
-  for (let i = 0; i < 32; i++) {
-    token += ALPHABET[Math.floor(Math.random() * 62)];
-  }
-  return token;
-}
+// function randomToken() {
+//   var token = '';
+//   for (let i = 0; i < 32; i++) {
+//     token += ALPHABET[Math.floor(Math.random() * 62)];
+//   }
+//   return token;
+// }
 
 // 登录
 const login = function (param) {
@@ -62,7 +63,8 @@ const login = function (param) {
         success: true,
         content: {
           username: account.username,
-          token: randomToken()
+          // token: randomToken(),
+          userId: account.id
         },
         message: '登录成功'
       }
@@ -95,6 +97,16 @@ const register = function (param) {
     success: true,
     content: {},
     message: '注册成功'
+  }
+}
+//登出
+const logout = function (param) {
+  var pathVariables = param.url.split('/');
+  const userId = pathVariables[pathVariables.length - 1];
+  return {
+    success: false,
+    content: {},
+    message: '登出失败'
   }
 }
 
@@ -138,7 +150,7 @@ const update = function (param) {
 const get = function (param) {
   param = param.body || '';
   let paramObj = JSON.parse(param);
-  console.log(paramObj)
+  // console.log(paramObj)
   return {
     success: true,
     content: {
@@ -198,13 +210,14 @@ const getPaperById = function (param) {
   }
 }
 
-// Mock.mock(RegExp('.*/api/user/login'), 'post', login); // 登录
-// Mock.mock(RegExp('.*/api/user/register'), 'post', register); // 注册
-//
-// Mock.mock(RegExp('.*/api/paper/add'), 'post', add); // 增
-// Mock.mock(RegExp('.*/api/paper/del'), 'delete', del); // 删
-// Mock.mock(RegExp('.*/api/paper/update'), 'put', update); // 改
-// Mock.mock(RegExp('.*/api/paper/get$'), 'get', get); // 查
-// Mock.mock(RegExp('.*/api/paper/publish'), 'put', publish); // 发布
-// Mock.mock(RegExp('.*/api/paper/abolish'), 'put', abolish); // 废止
-// Mock.mock(RegExp('.*/api/paper/get.*'), 'get', getPaperById); // 根据id获取法规详情
+Mock.mock(RegExp('.*/api/user/login'), 'post', login); // 登录
+Mock.mock(RegExp('.*/api/user/register'), 'post', register); // 注册
+Mock.mock(RegExp('.*/api/user/logout'), 'post', logout); // 登出
+
+Mock.mock(RegExp('.*/api/paper/add'), 'post', add); // 增
+Mock.mock(RegExp('.*/api/paper/del'), 'delete', del); // 删
+Mock.mock(RegExp('.*/api/paper/update'), 'put', update); // 改
+Mock.mock(RegExp('.*/api/paper/get$'), 'get', get); // 查
+Mock.mock(RegExp('.*/api/paper/publish'), 'put', publish); // 发布
+Mock.mock(RegExp('.*/api/paper/abolish'), 'put', abolish); // 废止
+Mock.mock(RegExp('.*/api/paper/get.*'), 'get', getPaperById); // 根据id获取法规详情
