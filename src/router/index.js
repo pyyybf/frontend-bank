@@ -33,7 +33,7 @@ export default new Router({
           component: Home,
         },
         {
-          path: '/edit',
+          path: '/manage',
           name: 'Manage',
           component: Manage,
         },

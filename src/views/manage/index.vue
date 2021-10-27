@@ -70,7 +70,7 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <div v-if="this.$route.path === '/edit'" class="actions">
+    <div v-if="this.$route.path === '/manage'" class="actions">
       <el-button size="small" @click="add">新建</el-button>
       <el-button size="small" @click="edit">修改</el-button>
       <el-button size="small" @click="del">删除</el-button>
@@ -82,6 +82,7 @@
     <el-table
       ref="multipleTable"
       :data="paperList"
+      v-loading="loading"
       tooltip-effect="dark"
       style="width: 100%;margin-top: 10px"
       @selection-change="handleSelectionChange">
@@ -122,7 +123,8 @@
       <!--      </el-table-column>-->
       <el-table-column
         prop="statue"
-        label="状态">
+        label="状态"
+        width="80">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status ? 'success' : 'warning'">{{ scope.row.status ? '已发布' : '未发布' }}</el-tag>
         </template>
@@ -159,6 +161,7 @@ export default {
       total: 0,
       paperList: [],
       ids: [],
+      loading: false,
     }
   },
   mounted() {
@@ -188,6 +191,7 @@ export default {
       }
     },
     onSearch() {
+      this.loading = true;
       this.getPaperList({
         pageNum: this.pageNum,
         ...this.queryForm
@@ -196,6 +200,8 @@ export default {
         this.total = res.total;
       }).catch(err => {
         this.$message.error(err);
+      }).finally(() => {
+        this.loading = false;
       })
     },
     handleCurrentChange() {
@@ -210,7 +216,12 @@ export default {
       })
     },
     add() {
-      this.$router.push({path: '/detail', query: {paperId: -1}});
+      this.$router.push({
+        path: '/detail',
+        query: {
+          paperId: -1
+        }
+      });
     },
     del() {
       if (this.ids.length > 0) {
@@ -230,12 +241,19 @@ export default {
       } else if (this.ids.length > 1) {
         this.$message.warning('只能选择一条法规进行修改');
       } else {
-        this.$router.push({path: '/detail', query: {paperId: this.ids[0]}});
+        this.$router.push({
+          path: '/detail',
+          query: {
+            paperId: this.ids[0]
+          }
+        });
       }
     },
     publish() {
       if (this.ids.length > 0) {
-        this.publishPapers({ids: this.ids}).then(res => {
+        this.publishPapers({
+          ids: this.ids
+        }).then(res => {
           this.$message.success(res);
           this.onSearch();
         }).catch(err => {

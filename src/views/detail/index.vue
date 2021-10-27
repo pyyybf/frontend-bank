@@ -18,18 +18,24 @@
         <el-col :span="12">
           <el-form-item label="发文部门" prop="department">
             <el-select v-model="paperForm.department" placeholder="请选择发文部门" style="width:95%;float: left">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option
+                v-for="item in departmentOptions"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="效力等级" prop="grade">
             <el-select v-model="paperForm.grade" placeholder="请选择效力等级" style="width:95%;float: left">
-              <el-option label="行政法规" value="1"></el-option>
-              <el-option label="部门规章" value="2"></el-option>
-              <el-option label="规范性文件" value="3"></el-option>
-              <el-option label="其他文件" value="4"></el-option>
+              <el-option
+                v-for="item in gradeOptions"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -38,6 +44,8 @@
             <el-date-picker style="width:95%;float: left"
                             v-model="paperForm.release_time"
                             type="date"
+                            format="yyyy年MM月dd日"
+                            value-format="yyyy-MM-dd"
                             placeholder="选择发布日期">
             </el-date-picker>
           </el-form-item>
@@ -47,6 +55,8 @@
             <el-date-picker style="width:95%;float: left"
                             v-model="paperForm.implement_time"
                             type="date"
+                            format="yyyy年MM月dd日"
+                            value-format="yyyy-MM-dd"
                             placeholder="选择实施日期">
             </el-date-picker>
           </el-form-item>
@@ -54,8 +64,12 @@
         <el-col :span="12">
           <el-form-item label="外规类别" prop="category">
             <el-select v-model="paperForm.category" placeholder="请选择外规类别" style="width:95%;float: left">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option
+                v-for="item in categoryOptions"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -63,11 +77,9 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="解读部门" prop="interpret_department">
-            <!--            <el-select v-model="paperForm.interpret_department" placeholder="请选择解读部门" style="width:95%;float: left">-->
-            <!--              <el-option label="已发布" value="1"></el-option>-->
-            <!--              <el-option label="未发布" value="0"></el-option>-->
-            <!--            </el-select>-->
-            <el-select v-model="paperForm.interpret_department" multiple placeholder="请选择解读部门"
+            <el-select v-model="paperForm.interpret_department"
+                       multiple
+                       placeholder="请选择解读部门"
                        style="width:95%;float: left">
               <el-option
                 v-for="item in interpretDepartmentOptions"
@@ -93,9 +105,8 @@
         <el-col :span="12">
           <el-form-item label="正文" prop="content" style="text-align: left">
             <el-upload
-              action=""
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
+              action="#"
+              :http-request="handleUpload"
               :before-remove="beforeRemove"
               :limit="1"
               :on-exceed="handleExceed"
@@ -107,8 +118,8 @@
         </el-col>
         <el-col :span="8" :offset="8">
           <el-form-item style="text-align: center">
-            <el-button type="primary" @click="save">保存</el-button>
-            <el-button>重置</el-button>
+            <el-button type="primary" :loading="saveLoading" @click="save">保存</el-button>
+            <el-button @click="reset">重置</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -155,7 +166,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "Detail",
@@ -177,10 +188,7 @@ export default {
         status: '',
         // waiguineihuazhuangtai: '',
       },
-      fileList: [{
-        name: 'food.jpeg',
-        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-      }],
+      fileList: [],
       attachmentList: [{
         name: '附件一',
         size: 23,
@@ -263,8 +271,47 @@ export default {
         {
           value: '信用卡部'
         },
-      ]
+      ],
+      categoryOptions: [
+        {
+          value: '外规类别1'
+        },
+        {
+          value: '外规类别2'
+        }
+      ],
+      gradeOptions: [
+        {
+          value: '法律'
+        },
+        {
+          value: '行政法规'
+        },
+        {
+          value: '部门规章'
+        },
+        {
+          value: '规范性文件'
+        },
+        {
+          value: '其他文件'
+        },
+      ],
+      departmentOptions: [
+        {
+          value: '银监会'
+        },
+        {
+          value: '人民银行'
+        },
+      ],
+      saveLoading: false,
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userId'
+    ])
   },
   created() {
     if (this.$route.query.paperId > 0) {
@@ -323,24 +370,65 @@ export default {
   methods: {
     ...mapActions([
       'getPaperById',
+      'addPaper',
     ]),
     goBack() {
-      this.$router.push({path: '/edit'});
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
+      this.$router.push({path: '/manage'});
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`当前限制选择1个文件，本次选择了${files.length}个文件，共选择了${files.length + fileList.length}个文件`);
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
+    handleUpload(params) {
+      this.paperForm.content = params.file;
+    },
     save() {
+      if (this.id > 0) {
 
+      } else {
+        // console.log(this.paperForm)
+        this.saveLoading = true;
+        var date = new Date();
+
+        // 通过 FormData 对象上传文件
+        let formData = new FormData();
+        for (let key in this.paperForm) {
+          formData.append(key, this.paperForm[key]);
+          // console.log(formData.get(key));
+        }
+        formData.set("interpret_department", this.paperForm.interpret_department.join(','));
+        formData.set("input_user", this.userId);
+        formData.set("input_time", date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+        formData.set("content", this.paperForm.content);
+
+        this.addPaper(formData).then(res => {
+          // this.saveLoading = false;
+          this.$message.success(res);
+          this.$router.push({path: '/manage'});
+        }).catch(err => {
+          this.$message.error(err);
+        }).finally(() => {
+          this.saveLoading = false;
+        })
+      }
+    },
+    reset() {
+      this.paperForm = {
+        title: '',
+        number: '',
+        category: '',
+        department: '',
+        grade: '',
+        release_time: '',
+        implement_time: '',
+        interpret_department: [],
+        input_user: '',
+        input_time: '',
+        content: '',
+        status: '',
+      }
     },
   },
 }

@@ -17,7 +17,7 @@ export const delPapersAPI = (data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/del`,
     method: 'DELETE',
-    data
+    params: data
   })
 }
 
@@ -34,7 +34,7 @@ export const getAPI = (data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/get`,
     method: 'GET',
-    data
+    params: data
   })
 }
 
@@ -42,7 +42,7 @@ export const publishPapersAPI = (data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/publish`,
     method: 'PUT',
-    data
+    params: data
   })
 }
 
@@ -50,12 +50,11 @@ export const abolishPapersAPI = (data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/abolish`,
     method: 'PUT',
-    data
+    params: data
   })
 }
 
 export const getPaperByIdAPI = (id) => {
-  console.log('2222222222',id)
   return HttpRequest.request({
     url: `${api.paperPre}/get/${id}`,
     method: 'GET'

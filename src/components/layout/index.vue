@@ -37,15 +37,13 @@
               <i class="el-icon-s-management"></i>
               <span>外规管理</span>
             </template>
-            <el-menu-item index="/edit">外规维护</el-menu-item>
+            <el-menu-item index="/manage">外规维护</el-menu-item>
             <el-menu-item index="/search">外规查询</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
       <el-main class="main-body">
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>

@@ -1,6 +1,6 @@
 const Mock = require('mockjs');
 
-const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+// const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 var accounts = [
   {
@@ -112,12 +112,24 @@ const logout = function (param) {
 }
 
 const add = function (param) {
-  param = param.body || '';
-  let paramObj = JSON.parse(param);
+  // param = param.body || '';
+  // let paramObj = JSON.parse(param);
+  // console.log(param.body)
   curId++;
   papers.push({
     id: curId,
-    ...paramObj
+    title: param.body.get('title'),
+    number: param.body.get('number'),
+    category: param.body.get('category'),
+    department: param.body.get('department'),
+    grade: param.body.get('grade'),
+    release_time: param.body.get('release_time'),
+    implement_time: param.body.get('implement_time'),
+    interpret_department: param.body.get('interpret_department'),
+    input_user: param.body.get('input_user'),
+    input_time: param.body.get('input_time'),
+    content: param.body.get('content'),
+    status: param.body.get('status'),
   })
   return {
     success: true,
@@ -127,8 +139,19 @@ const add = function (param) {
 }
 
 const del = function (param) {
-  param = param.body || '';
-  let paramObj = JSON.parse(param);
+  var params = param.url.split('?').pop().split('&');
+  let paramObj = {};
+  for (let param of params) {
+    param = param.split('=');
+    if (param[0].endsWith('[]')) {
+      if (!paramObj[param[0].slice(0, -2)]) {
+        paramObj[param[0].slice(0, -2)] = [];
+      }
+      paramObj[param[0].slice(0, -2)].push(Number(param[1]));
+    } else {
+      paramObj[param[0]] = param[1];
+    }
+  }
   papers = papers.filter(v => !paramObj.ids.includes(v.id));
   return {
     success: true,
@@ -149,13 +172,16 @@ const update = function (param) {
 }
 
 const get = function (param) {
-  param = param.body || '';
-  let paramObj = JSON.parse(param);
-  // console.log(paramObj)
+  var params = param.url.split('?').pop().split('&');
+  let paramObj = {};
+  for (let param of params) {
+    param = param.split('=');
+    paramObj[param[0]] = param[1];
+  }
   return {
     success: true,
     content: {
-      list: papers.slice((paramObj.pageNum - 1) * 10, paramObj.pageNum * 10),
+      list: papers.slice((Number(paramObj.pageNum) - 1) * 10, Number(paramObj.pageNum) * 10),
       total: papers.length
     },
     message: '获取成功'
@@ -163,8 +189,19 @@ const get = function (param) {
 }
 
 const publish = function (param) {
-  param = param.body || '';
-  let paramObj = JSON.parse(param);
+  var params = param.url.split('?').pop().split('&');
+  let paramObj = {};
+  for (let param of params) {
+    param = param.split('=');
+    if (param[0].endsWith('[]')) {
+      if (!paramObj[param[0].slice(0, -2)]) {
+        paramObj[param[0].slice(0, -2)] = [];
+      }
+      paramObj[param[0].slice(0, -2)].push(Number(param[1]));
+    } else {
+      paramObj[param[0]] = param[1];
+    }
+  }
   for (let paper of papers) {
     if (paramObj.ids.includes(paper.id)) {
       paper.status = true;
@@ -178,8 +215,19 @@ const publish = function (param) {
 }
 
 const abolish = function (param) {
-  param = param.body || '';
-  let paramObj = JSON.parse(param);
+  var params = param.url.split('?').pop().split('&');
+  let paramObj = {};
+  for (let param of params) {
+    param = param.split('=');
+    if (param[0].endsWith('[]')) {
+      if (!paramObj[param[0].slice(0, -2)]) {
+        paramObj[param[0].slice(0, -2)] = [];
+      }
+      paramObj[param[0].slice(0, -2)].push(Number(param[1]));
+    } else {
+      paramObj[param[0]] = param[1];
+    }
+  }
   for (let paper of papers) {
     if (paramObj.ids.includes(paper.id)) {
       paper.status = false;
@@ -211,14 +259,14 @@ const getPaperById = function (param) {
   }
 }
 
-Mock.mock(RegExp('.*/api/user/login'), 'post', login); // 登录
-Mock.mock(RegExp('.*/api/user/register'), 'post', register); // 注册
-Mock.mock(RegExp('.*/api/user/logout'), 'post', logout); // 登出
-
-Mock.mock(RegExp('.*/api/paper/add'), 'post', add); // 增
-Mock.mock(RegExp('.*/api/paper/del'), 'delete', del); // 删
-Mock.mock(RegExp('.*/api/paper/update'), 'put', update); // 改
-Mock.mock(RegExp('.*/api/paper/get$'), 'get', get); // 查
-Mock.mock(RegExp('.*/api/paper/publish'), 'put', publish); // 发布
-Mock.mock(RegExp('.*/api/paper/abolish'), 'put', abolish); // 废止
-Mock.mock(RegExp('.*/api/paper/get.*'), 'get', getPaperById); // 根据id获取法规详情
+// Mock.mock(RegExp('.*/api/user/login'), 'post', login); // 登录
+// Mock.mock(RegExp('.*/api/user/register'), 'post', register); // 注册
+// Mock.mock(RegExp('.*/api/user/logout'), 'post', logout); // 登出
+//
+// Mock.mock(RegExp('.*/api/paper/add'), 'post', add); // 增
+// Mock.mock(RegExp('.*/api/paper/del'), 'delete', del); // 删
+// Mock.mock(RegExp('.*/api/paper/update'), 'put', update); // 改
+// Mock.mock(RegExp('.*/api/paper/get/.*'), 'get', getPaperById); // 根据id获取法规详情
+// Mock.mock(RegExp('.*/api/paper/get'), 'get', get); // 查
+// Mock.mock(RegExp('.*/api/paper/publish'), 'put', publish); // 发布
+// Mock.mock(RegExp('.*/api/paper/abolish'), 'put', abolish); // 废止
