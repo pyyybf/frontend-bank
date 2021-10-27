@@ -69,6 +69,8 @@ export default {
       this.logout(localStorage.getItem('userId')).then(res => {
         this.$message.success(res);
         this.$router.push({path: '/login'});
+      }).catch(err => {
+        this.$message.error(err);
       })
     },
   },

@@ -103,10 +103,11 @@ const register = function (param) {
 const logout = function (param) {
   var pathVariables = param.url.split('/');
   const userId = pathVariables[pathVariables.length - 1];
+  console.log(userId)
   return {
-    success: false,
+    success: true,
     content: {},
-    message: '登出失败'
+    message: '登出成功'
   }
 }
 
