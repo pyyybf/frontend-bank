@@ -149,11 +149,11 @@ export default {
   right: 0;
   width: 360px;
   margin: 120px auto;
-  border-top: 10px solid #409EFF;
+  border-top: 10px solid #012d54;
 }
 
 .register-center-layout {
-  background: #409EFF;
+  background: #012d54;
   width: auto;
   height: auto;
   max-width: 100%;
@@ -163,14 +163,14 @@ export default {
 
 .register-logo {
   text-align: center;
-  color: #409EFF;
+  color: #012d54;
   font-size: 56px;
   padding: 0;
 }
 
 .register-title {
   text-align: center;
-  color: #409EFF;
+  color: #012d54;
   /*font-family: 幼圆;*/
   margin-top: 12px;
 }
@@ -181,6 +181,6 @@ export default {
 </style>
 <style>
 .el-input__icon {
-  color: #409EFF;
+  color: #012d54;
 }
 </style>

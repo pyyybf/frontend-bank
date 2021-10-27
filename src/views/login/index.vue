@@ -2,7 +2,7 @@
   <div>
     <el-card class="login-form-layout">
       <div class="login-logo">
-        <i class="el-icon-collection"></i>
+        <img :src="require('../../assets/logo.png')" height="56px">
       </div>
       <h2 class="login-title">人民银行法规库</h2>
       <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="login-form">
@@ -130,7 +130,6 @@ export default {
 .login-logo {
   text-align: center;
   color: #012d54;
-  font-size: 56px;
   padding: 0;
 }
 

@@ -1,10 +1,12 @@
 <template>
-  <el-container>
+  <el-container style="padding-top: 0;margin-top: 0">
     <el-header height="60px">
-      <el-row>
+      <el-row style="height: 60px">
         <el-col :span="8" class="header-title">
-          <i class="el-icon-collection"></i>
-          <span class="header-text">人民银行法规库</span>
+          <div class="header-title-logo">
+            <img :src="require('../../assets/logo.png')" height="50px" style="margin-top:5px">
+          </div>
+          <span class="header-title-text">人民银行法规库</span>
         </el-col>
         <el-col :span="6" :offset="10" style="text-align: right">
           <span class="header-text" style="color: white">欢迎，</span>
@@ -79,8 +81,20 @@ export default {
 .header-title {
   color: white;
   text-align: left;
-  font-family: 幼圆;
   font-size: x-large;
+  height: 100%;
+}
+
+.header-title-logo {
+  height: 100%;
+  float: left;
+}
+
+.header-title-text {
+  color: white;
+  font-size: x-large;
+  float: left;
+  margin-left: 15px;
 }
 
 .header-text:hover {
