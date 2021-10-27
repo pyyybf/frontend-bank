@@ -13,7 +13,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     }
   } else {
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path === '/register') {
       next();
     } else {
       Message.error("未登录");
