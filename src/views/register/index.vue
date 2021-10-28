@@ -49,6 +49,7 @@ import login_bg from '@/assets/login_bg.png'
 import VerificationCode from '@/components/verificationCode'
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+const sha256 = require("js-sha256").sha256;
 
 export default {
   name: 'Register',
@@ -119,7 +120,10 @@ export default {
         return;
       }
       this.registerLoading = true;
-      this.register(this.registerForm).then(res => {
+      this.register({
+        ...this.registerForm,
+        password: sha256(this.registerForm.password)
+      }).then(res => {
         this.registerLoading = false;
         this.$message.success(res);
         this.$router.push({path: '/login'});
