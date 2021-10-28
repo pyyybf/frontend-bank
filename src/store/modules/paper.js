@@ -13,7 +13,6 @@ const user = {
   mutations: {},
   actions: {
     getPaperList({}, data) {
-      // console.log(data)
       return new Promise((resolve, reject) => {
         getAPI(data).then(response => {
           if (response.data.success) {
@@ -30,7 +29,7 @@ const user = {
       return new Promise((resolve, reject) => {
         addPaperAPI(data).then(response => {
           if (response.data.success) {
-            resolve(response.data.message);
+            resolve('添加成功');
           } else {
             reject(response.data.message);
           }
@@ -41,7 +40,7 @@ const user = {
       return new Promise((resolve, reject) => {
         delPapersAPI(data).then(response => {
           if (response.data.success) {
-            resolve(response.data.message);
+            resolve('删除成功');
           } else {
             reject(response.data.message);
           }
@@ -52,7 +51,7 @@ const user = {
       return new Promise((resolve, reject) => {
         updatePaperByIdAPI(data.id, data.paperForm).then(response => {
           if (response.data.success) {
-            resolve(response.data.message);
+            resolve('修改成功');
           } else {
             reject(response.data.message);
           }
@@ -63,7 +62,7 @@ const user = {
       return new Promise((resolve, reject) => {
         publishPapersAPI(data).then(response => {
           if (response.data.success) {
-            resolve(response.data.message);
+            resolve('发布成功');
           } else {
             reject(response.data.message);
           }
@@ -74,7 +73,7 @@ const user = {
       return new Promise((resolve, reject) => {
         abolishPapersAPI(data).then(response => {
           if (response.data.success) {
-            resolve(response.data.message);
+            resolve('废止成功');
           } else {
             reject(response.data.message);
           }
