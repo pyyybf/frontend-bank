@@ -176,7 +176,6 @@ export default {
         input_time: '',
         content: '',
         status: '',
-        // waiguineihuazhuangtai: '',
       },
       fileList: [],
       attachmentList: [{
@@ -245,11 +244,6 @@ export default {
           message: '请选择状态',
           trigger: 'blur',
         }],
-        // waiguineihuazhuangtai: [{
-        //   required: true,
-        //   message:'请输入外规内化状态',
-        //   trigger: 'blur',
-        // }],
       },
       interpretDepartmentOptions: [
         {
@@ -334,7 +328,6 @@ export default {
   watch: {
     '$route.query.paperId'(val) {
       if (this.$route.path.includes('detail')) {
-        // console.log(val)
         if (val > 0) {
           this.id = this.$route.query.paperId;
           this.getPaperById(this.id).then(res => {
@@ -370,6 +363,7 @@ export default {
     ...mapActions([
       'getPaperById',
       'addPaper',
+      'updatePaperById',
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -384,26 +378,32 @@ export default {
       this.paperForm.content = params.file;
     },
     save() {
+      this.saveLoading = true;
+      var date = new Date();
+
+      // 通过 FormData 对象上传文件
+      let formData = new FormData();
+      for (let key in this.paperForm) {
+        formData.append(key, this.paperForm[key]);
+      }
+      formData.set("interpret_department", this.paperForm.interpret_department.join(','));
+      formData.set("input_user", this.userId);
+      formData.set("input_time", date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+      formData.set("content", this.paperForm.content);
       if (this.id > 0) {
-
+        this.updatePaperById({
+          id: this.id,
+          paperForm: formData
+        }).then(res => {
+          this.$message.success(res);
+          this.$router.push({path: '/manage'});
+        }).catch(err => {
+          this.$message.error(err);
+        }).finally(() => {
+          this.saveLoading = false;
+        })
       } else {
-        // console.log(this.paperForm)
-        this.saveLoading = true;
-        var date = new Date();
-
-        // 通过 FormData 对象上传文件
-        let formData = new FormData();
-        for (let key in this.paperForm) {
-          formData.append(key, this.paperForm[key]);
-          // console.log(formData.get(key));
-        }
-        formData.set("interpret_department", this.paperForm.interpret_department.join(','));
-        formData.set("input_user", this.userId);
-        formData.set("input_time", date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
-        formData.set("content", this.paperForm.content);
-
         this.addPaper(formData).then(res => {
-          // this.saveLoading = false;
           this.$message.success(res);
           this.$router.push({path: '/manage'});
         }).catch(err => {
