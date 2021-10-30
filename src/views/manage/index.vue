@@ -9,12 +9,12 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.title" placeholder="请输入法规标题" style="width:90%"></el-input>
+                <el-input v-model="queryForm.title" placeholder="请输入法规标题" class="form-item"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力等级">
-                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" style="width:90%">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="form-item">
                   <el-option label="行政法规" value="1"></el-option>
                   <el-option label="部门规章" value="2"></el-option>
                   <el-option label="规范性文件" value="3"></el-option>
@@ -24,7 +24,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发布时间">
-                <el-date-picker style="width:90%"
+                <el-date-picker class="form-item"
                                 v-model="queryForm.release_time"
                                 type="daterange"
                                 range-separator="至"
@@ -35,7 +35,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="实施时间">
-                <el-date-picker style="width:90%"
+                <el-date-picker class="form-item"
                                 v-model="queryForm.implement_time"
                                 type="daterange"
                                 range-separator="至"
@@ -46,7 +46,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-select v-model="queryForm.department" placeholder="请选择发文部门" style="width:90%">
+                <el-select v-model="queryForm.department" placeholder="请选择发文部门" class="form-item">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -54,7 +54,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.status" placeholder="请选择状态" style="width:90%">
+                <el-select v-model="queryForm.status" placeholder="请选择状态" class="form-item">
                   <el-option label="已发布" :value="true"></el-option>
                   <el-option label="未发布" :value="false"></el-option>
                 </el-select>
@@ -76,8 +76,8 @@
       <el-button size="small" @click="del">删除</el-button>
       <el-button size="small" @click="publish">发布</el-button>
       <el-button size="small" @click="abolish">废止</el-button>
-      <!--      <el-button size="small" @click="">外规内化</el-button>-->
-      <!--      <el-button size="small" @click="">外规内化结果</el-button>-->
+      <el-button size="small" @click="analyze">外规内化</el-button>
+      <el-button size="small" @click="analyseResult">外规内化结果</el-button>
     </div>
     <el-table
       ref="multipleTable"
@@ -275,6 +275,27 @@ export default {
         this.$message.warning('请选择要废止的法规');
       }
     },
+    analyze() {
+      if (this.ids.length === 0) {
+        this.$message.warning('请选择要外规内化的法规');
+      } else if (this.ids.length > 1) {
+        this.$message.warning('只能选择一条法规进行外规内化');
+      } else {
+        this.$router.push({
+          path: '/analyse',
+          query: {
+            paperId: this.ids[0]
+          }
+        });
+      }
+    },
+    analyseResult() {
+      if (this.ids.length > 0) {
+        //TODO: 从后端获取结果
+      } else {
+        this.$message.warning('请选择要获取外规内化结果的法规');
+      }
+    },
   }
 }
 </script>
@@ -283,6 +304,10 @@ export default {
 .actions {
   text-align: left;
   margin-top: 10px;
+}
+
+.form-item {
+  width: 90%;
 }
 </style>
 

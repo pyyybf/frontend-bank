@@ -7,6 +7,7 @@ import List from '@/views/list'
 import Home from '@/views/home'
 import Detail from '@/views/detail'
 import Manage from '@/views/manage'
+import Analyse from '@/views/analyse'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
           path: '/detail',
           name: 'Detail',
           component: Detail,
+        },
+        {
+          path: '/analyse',
+          name: 'Analyse',
+          component: Analyse,
         },
       ]
     }

@@ -60,3 +60,12 @@ export const getPaperByIdAPI = (id) => {
     method: 'GET'
   })
 }
+
+export const analyzePaperByIdAPI = (id, data) => {
+  return HttpRequest.request({
+    url: `${api.paperPre}/analyze/${id}`,
+    method: 'PUT',
+    headers: {'Content-Type': 'multipart/form-data'},
+    data
+  })
+}

@@ -9,12 +9,12 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.title" placeholder="请输入法规标题" style="width:90%"></el-input>
+                <el-input v-model="queryForm.title" placeholder="请输入法规标题" class="form-item"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力等级">
-                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" style="width:90%">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="form-item">
                   <el-option label="行政法规" value="1"></el-option>
                   <el-option label="部门规章" value="2"></el-option>
                   <el-option label="规范性文件" value="3"></el-option>
@@ -24,8 +24,8 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发布时间">
-                <el-date-picker style="width:90%"
-                                v-model="queryForm.release_time"
+                <el-date-picker class="form-item"
+                                v-model=" queryForm.release_time "
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
@@ -35,7 +35,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="实施时间">
-                <el-date-picker style="width:90%"
+                <el-date-picker class="form-item"
                                 v-model="queryForm.implement_time"
                                 type="daterange"
                                 range-separator="至"
@@ -46,7 +46,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-select v-model="queryForm.department" placeholder="请选择发文部门" style="width:90%">
+                <el-select v-model="queryForm.department" placeholder="请选择发文部门" class="form-item">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -54,7 +54,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.status" placeholder="请选择状态" style="width:90%">
+                <el-select v-model="queryForm.status" placeholder="请选择状态" class="form-item">
                   <el-option label="已发布" :value="true"></el-option>
                   <el-option label="未发布" :value="false"></el-option>
                 </el-select>
@@ -97,15 +97,6 @@
         prop="grade"
         label="效力等级">
       </el-table-column>
-      <!--      <el-table-column-->
-      <!--        label="外规内化状态">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-tag :type="scope.row.waiguineihuazhuangtai==='1' ? 'success' : 'warning'">{{-->
-      <!--              scope.row.waiguineihuazhuangtai === '1' ? '已内化' : '未内化'-->
-      <!--            }}-->
-      <!--          </el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column
         prop="statue"
         label="状态">
@@ -146,7 +137,6 @@ export default {
         input_time: '',
         content: '',
         status: '',
-        // waiguineihuazhuangtai: '',
       },
       pageNum: 1,
       total: 0,
@@ -189,6 +179,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.form-item {
+  width: 90%;
+}
+</style>
 
 <style>
 .el-collapse-item__content {

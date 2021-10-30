@@ -1,69 +1,23 @@
 <template>
   <div>
-    <el-page-header @back="goBack" :content="(this.id>0?'修改':'新建')+'法规'">
+    <el-page-header @back="goBack" content="外规解读">
     </el-page-header>
-    <el-form ref="paperForm" :model="paperForm" :rules="paperRules" label-width="80px" size="medium"
+    <el-form ref="analyseForm" :model="analyseForm" :rules="paperRules" label-width="80px" size="medium"
              class="paper-form">
       <el-row>
         <el-col :span="12">
           <el-form-item label="法规标题" prop="title">
-            <el-input v-model="paperForm.title" placeholder="请输入法规标题" style="width:95%;float: left"></el-input>
+            <el-input v-model="analyseForm.title" placeholder="请输入法规标题" style="width:95%;float: left"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="发文文号" prop="number">
-            <el-input v-model="paperForm.number" placeholder="请输入发文文号" style="width:95%;float: left"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="发文部门" prop="department">
-            <el-select v-model="paperForm.department" placeholder="请选择发文部门" style="width:95%;float: left">
-              <el-option
-                v-for="item in departmentOptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="效力等级" prop="grade">
-            <el-select v-model="paperForm.grade" placeholder="请选择效力等级" style="width:95%;float: left">
-              <el-option
-                v-for="item in gradeOptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="发布日期" prop="release_time">
-            <el-date-picker style="width:95%;float: left"
-                            v-model="paperForm.release_time"
-                            type="date"
-                            format="yyyy年MM月dd日"
-                            value-format="yyyy-MM-dd"
-                            placeholder="选择发布日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="实施日期" prop="implement_time">
-            <el-date-picker style="width:95%;float: left"
-                            v-model="paperForm.implement_time"
-                            type="date"
-                            format="yyyy年MM月dd日"
-                            value-format="yyyy-MM-dd"
-                            placeholder="选择实施日期">
-            </el-date-picker>
+            <el-input v-model="analyseForm.number" placeholder="请输入发文文号" style="width:95%;float: left"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="外规类别" prop="category">
-            <el-select v-model="paperForm.category" placeholder="请选择外规类别" style="width:95%;float: left">
+            <el-select v-model="analyseForm.category" placeholder="请选择外规类别" style="width:95%;float: left">
               <el-option
                 v-for="item in categoryOptions"
                 :key="item.value"
@@ -77,7 +31,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="解读部门" prop="interpret_department">
-            <el-select v-model="paperForm.interpret_department"
+            <el-select v-model="analyseForm.interpret_department"
                        multiple
                        placeholder="请选择解读部门"
                        style="width:95%;float: left">
@@ -159,24 +113,16 @@
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: "Detail",
+  name: "Analyse",
   data() {
     return {
       id: 0,
-      paperForm: {
+      analyseForm: {
         title: '',
         number: '',
         category: '',
-        department: '',
-        grade: '',
-        release_time: '',
-        implement_time: '',
         interpret_department: [],
-        input_user: '',
-        input_time: '',
         content: '',
-        status: '',
-        // waiguineihuazhuangtai: '',
       },
       fileList: [],
       attachmentList: [{
@@ -200,39 +146,9 @@ export default {
           message: '请选择外规类别',
           trigger: 'blur',
         }],
-        department: [{
-          required: true,
-          message: '请选择发文部门',
-          trigger: 'blur',
-        }],
-        grade: [{
-          required: true,
-          message: '请选择效力等级',
-          trigger: 'blur',
-        }],
-        release_time: [{
-          required: true,
-          message: '请选择发布日期',
-          trigger: 'blur',
-        }],
-        implement_time: [{
-          required: true,
-          message: '请选择实施日期',
-          trigger: 'blur',
-        }],
         interpret_department: [{
           required: false,
           message: '请选择解读部门',
-          trigger: 'blur',
-        }],
-        input_user: [{
-          required: true,
-          message: '请输入录入人',
-          trigger: 'blur',
-        }],
-        input_time: [{
-          required: true,
-          message: '请选择录入时间',
           trigger: 'blur',
         }],
         content: [{
@@ -240,16 +156,6 @@ export default {
           message: '请上传正文',
           trigger: 'blur',
         }],
-        status: [{
-          required: true,
-          message: '请选择状态',
-          trigger: 'blur',
-        }],
-        // waiguineihuazhuangtai: [{
-        //   required: true,
-        //   message:'请输入外规内化状态',
-        //   trigger: 'blur',
-        // }],
       },
       interpretDepartmentOptions: [
         {
@@ -279,31 +185,6 @@ export default {
           value: '其他文件'
         },
       ],
-      gradeOptions: [
-        {
-          value: '法律'
-        },
-        {
-          value: '行政法规'
-        },
-        {
-          value: '部门规章'
-        },
-        {
-          value: '规范性文件'
-        },
-        {
-          value: '其他文件'
-        },
-      ],
-      departmentOptions: [
-        {
-          value: '银监会'
-        },
-        {
-          value: '人民银行'
-        },
-      ],
       saveLoading: false,
     }
   },
@@ -322,7 +203,7 @@ export default {
   mounted() {
     if (this.$route.query.paperId > 0) {
       this.getPaperById(this.$route.query.paperId).then(res => {
-        this.paperForm = {
+        this.analyseForm = {
           ...res,
           interpret_department: res.interpret_department.split(',')
         };
@@ -338,7 +219,7 @@ export default {
         if (val > 0) {
           this.id = this.$route.query.paperId;
           this.getPaperById(this.id).then(res => {
-            this.paperForm = {
+            this.analyseForm = {
               ...res,
               interpret_department: res.interpret_department.split(',')
             };
@@ -347,20 +228,12 @@ export default {
           })
         } else {
           this.id = -1;
-          this.paperForm = {
+          this.analyseForm = {
             title: '',
             number: '',
             category: '',
-            department: '',
-            grade: '',
-            release_time: '',
-            implement_time: '',
             interpret_department: [],
-            input_user: '',
-            input_time: '',
             content: '',
-            status: '',
-            // waiguineihuazhuangtai: '',
           };
         }
       }
@@ -369,7 +242,7 @@ export default {
   methods: {
     ...mapActions([
       'getPaperById',
-      'addPaper',
+      'analyzePaperById',
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -381,40 +254,33 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleUpload(params) {
-      this.paperForm.content = params.file;
+      this.analyseForm.content = params.file;
     },
     save() {
-      if (this.id > 0) {
+      this.saveLoading = true;
 
-      } else {
-        // console.log(this.paperForm)
-        this.saveLoading = true;
-        var date = new Date();
-
-        // 通过 FormData 对象上传文件
-        let formData = new FormData();
-        for (let key in this.paperForm) {
-          formData.append(key, this.paperForm[key]);
-          // console.log(formData.get(key));
-        }
-        formData.set("interpret_department", this.paperForm.interpret_department.join(','));
-        formData.set("input_user", this.userId);
-        formData.set("input_time", date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
-        formData.set("content", this.paperForm.content);
-
-        this.addPaper(formData).then(res => {
-          // this.saveLoading = false;
-          this.$message.success(res);
-          this.$router.push({path: '/manage'});
-        }).catch(err => {
-          this.$message.error(err);
-        }).finally(() => {
-          this.saveLoading = false;
-        })
+      // 通过 FormData 对象上传文件
+      let formData = new FormData();
+      for (let key in this.analyseForm) {
+        formData.append(key, this.analyseForm[key]);
       }
+      formData.set("interpret_department", this.analyseForm.interpret_department.join(','));
+      formData.set("content", this.analyseForm.content);
+
+      this.analyzePaperById({
+        id: this.id,
+        analyseForm: formData
+      }).then(res => {
+        this.$message.success(res);
+        this.$router.push({path: '/manage'});
+      }).catch(err => {
+        this.$message.error(err);
+      }).finally(() => {
+        this.saveLoading = false;
+      })
     },
     reset() {
-      this.paperForm = {
+      this.analyseForm = {
         title: '',
         number: '',
         category: '',
