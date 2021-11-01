@@ -17,6 +17,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getAPI(data).then(response => {
           if (response.data.success) {
+            console.log(response.data.content)
             resolve(response.data.content);
           } else {
             reject(response.data.message);

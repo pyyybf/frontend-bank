@@ -176,6 +176,7 @@ export default {
         input_time: '',
         content: '',
         status: '',
+        analyse_status: '',
       },
       fileList: [],
       attachmentList: [{
@@ -192,11 +193,6 @@ export default {
         number: [{
           required: false,
           message: '请输入发文文号',
-          trigger: 'blur',
-        }],
-        category: [{
-          required: true,
-          message: '请选择外规类别',
           trigger: 'blur',
         }],
         department: [{
@@ -224,24 +220,9 @@ export default {
           message: '请选择解读部门',
           trigger: 'blur',
         }],
-        input_user: [{
-          required: true,
-          message: '请输入录入人',
-          trigger: 'blur',
-        }],
-        input_time: [{
-          required: true,
-          message: '请选择录入时间',
-          trigger: 'blur',
-        }],
         content: [{
           required: true,
           message: '请上传正文',
-          trigger: 'blur',
-        }],
-        status: [{
-          required: true,
-          message: '请选择状态',
           trigger: 'blur',
         }],
       },
@@ -316,9 +297,14 @@ export default {
   mounted() {
     if (this.$route.query.paperId > 0) {
       this.getPaperById(this.$route.query.paperId).then(res => {
+        var interpret_department = res.interpret_department.split(',');
+        if (interpret_department[0] === '') {
+          interpret_department.pop();
+        }
         this.paperForm = {
           ...res,
-          interpret_department: res.interpret_department.split(',')
+          content: null,
+          interpret_department: interpret_department
         };
       }).catch(err => {
         this.$message.error(err);
@@ -331,9 +317,14 @@ export default {
         if (val > 0) {
           this.id = this.$route.query.paperId;
           this.getPaperById(this.id).then(res => {
+            var interpret_department = res.interpret_department.split(',');
+            if (interpret_department[0] === '') {
+              interpret_department.pop();
+            }
             this.paperForm = {
               ...res,
-              interpret_department: res.interpret_department.split(',')
+              interpret_department: interpret_department,
+              content: null
             };
           }).catch(err => {
             this.$message.error(err);
@@ -351,9 +342,9 @@ export default {
             interpret_department: [],
             input_user: '',
             input_time: '',
-            content: '',
-            status: '',
-            // waiguineihuazhuangtai: '',
+            content: null,
+            status: false,
+            analyse_status: false,
           };
         }
       }
@@ -382,14 +373,22 @@ export default {
       var date = new Date();
 
       // 通过 FormData 对象上传文件
-      let formData = new FormData();
-      for (let key in this.paperForm) {
-        formData.append(key, this.paperForm[key]);
-      }
-      formData.set("interpret_department", this.paperForm.interpret_department.join(','));
-      formData.set("input_user", this.userId);
-      formData.set("input_time", date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
-      formData.set("content", this.paperForm.content);
+      var formData = new FormData();
+
+      this.paperForm.content && formData.append('content', this.paperForm.content);
+      formData.append('title', this.paperForm.title);
+      formData.append('number', this.paperForm.number);
+      formData.append('category', this.paperForm.category);
+      formData.append('department', this.paperForm.department);
+      formData.append('grade', this.paperForm.grade);
+      formData.append('release_time', this.paperForm.release_time.substring(0, 10));
+      formData.append('implement_time', this.paperForm.implement_time.substring(0, 10));
+      formData.append('interpret_department', this.paperForm.interpret_department.join(','));
+      formData.append('input_user', this.userId);
+      formData.append('input_time', date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+      formData.append('status', this.paperForm.status);
+      formData.append('analyse_status', this.paperForm.analyse_status);
+
       if (this.id > 0) {
         this.updatePaperById({
           id: this.id,
@@ -425,8 +424,9 @@ export default {
         interpret_department: [],
         input_user: '',
         input_time: '',
-        content: '',
-        status: '',
+        content: null,
+        status: false,
+        analyse_status: false,
       }
     },
   },

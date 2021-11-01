@@ -14,17 +14,19 @@ export const addPaperAPI = (data) => {
 }
 
 export const delPapersAPI = (data) => {
+  let params = new URLSearchParams();
+  params.append("ids", data.ids);
   return HttpRequest.request({
     url: `${api.paperPre}/del`,
     method: 'DELETE',
-    params: data
+    params
   })
 }
 
 export const updatePaperByIdAPI = (id, data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/update/${id}`,
-    method: 'PUT',
+    method: 'POST',
     headers: {'Content-Type': 'multipart/form-data'},
     data
   })
@@ -39,18 +41,22 @@ export const getAPI = (data) => {
 }
 
 export const publishPapersAPI = (data) => {
+  let params = new URLSearchParams();
+  params.append("ids", data.ids);
   return HttpRequest.request({
     url: `${api.paperPre}/publish`,
     method: 'PUT',
-    params: data
+    params
   })
 }
 
 export const abolishPapersAPI = (data) => {
+  let params = new URLSearchParams();
+  params.append("ids", data.ids);
   return HttpRequest.request({
     url: `${api.paperPre}/abolish`,
     method: 'PUT',
-    params: data
+    params
   })
 }
 

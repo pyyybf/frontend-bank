@@ -27,6 +27,7 @@
                 <el-date-picker class="form-item"
                                 v-model="queryForm.release_time"
                                 type="daterange"
+                                value-format="yyyy-MM-dd"
                                 range-separator="至"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
@@ -38,6 +39,7 @@
                 <el-date-picker class="form-item"
                                 v-model="queryForm.implement_time"
                                 type="daterange"
+                                value-format="yyyy-MM-dd"
                                 range-separator="至"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
@@ -96,37 +98,57 @@
       </el-table-column>
       <el-table-column
         prop="department"
-        label="发文机构">
+        label="发文机构"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="release_time"
         label="发布日期"
-        width="120">
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          {{ scope.row.release_time.substring(0, 10) }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="implement_time"
         label="实施日期"
-        width="120">
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          {{ scope.row.implement_time.substring(0, 10) }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="grade"
-        label="效力等级">
+        label="效力等级"
+        width="120"
+        header-align="center"
+        align="center">
       </el-table-column>
-      <!--      <el-table-column-->
-      <!--        label="外规内化状态">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-tag :type="scope.row.waiguineihuazhuangtai==='1' ? 'success' : 'warning'">{{-->
-      <!--              scope.row.waiguineihuazhuangtai === '1' ? '已内化' : '未内化'-->
-      <!--            }}-->
-      <!--          </el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column
-        prop="statue"
+        prop="status"
         label="状态"
-        width="80">
+        width="80"
+        header-align="center"
+        align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status ? 'success' : 'warning'">{{ scope.row.status ? '已发布' : '未发布' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="analyse_status"
+        label="外规内化状态"
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.analyse_status ? 'primary' : 'info'">{{
+              scope.row.analyse_status ? '已内化' : '未内化'
+            }}
+          </el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -153,9 +175,9 @@ export default {
         title: '',
         department: '',
         grade: '',
-        release_time: '',
-        implement_time: '',
-        status: null,
+        release_time: [],
+        implement_time: [],
+        status: '',
       },
       pageNum: 1,
       total: 0,
@@ -185,13 +207,14 @@ export default {
         title: '',
         department: '',
         grade: '',
-        release_time: '',
-        implement_time: '',
-        status: null,
+        release_time: [],
+        implement_time: [],
+        status: '',
       }
     },
     onSearch() {
       this.loading = true;
+      this.pageNum = 1;
       this.getPaperList({
         pageNum: this.pageNum,
         ...this.queryForm

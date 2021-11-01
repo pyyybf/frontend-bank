@@ -81,27 +81,57 @@
       </el-table-column>
       <el-table-column
         prop="department"
-        label="发文机构">
+        label="发文机构"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="release_time"
         label="发布日期"
-        width="120">
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          {{ scope.row.release_time.substring(0, 10) }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="implement_time"
         label="实施日期"
-        width="120">
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          {{ scope.row.implement_time.substring(0, 10) }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="grade"
-        label="效力等级">
+        label="效力等级"
+        width="120"
+        header-align="center"
+        align="center">
       </el-table-column>
       <el-table-column
-        prop="statue"
-        label="状态">
+        prop="status"
+        label="状态"
+        width="80"
+        header-align="center"
+        align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status ? 'success' : 'warning'">{{ scope.row.status ? '已发布' : '未发布' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="analyse_status"
+        label="外规内化状态"
+        width="120"
+        header-align="center"
+        align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.analyse_status ? 'primary' : 'info'">{{
+              scope.row.analyse_status ? '已内化' : '未内化'
+            }}
+          </el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -126,16 +156,10 @@ export default {
     return {
       queryForm: {
         title: '',
-        number: '',
-        category: '',
         department: '',
         grade: '',
-        release_time: '',
-        implement_time: '',
-        interpret_department: '',
-        input_user: '',
-        input_time: '',
-        content: '',
+        release_time: [],
+        implement_time: [],
         status: '',
       },
       pageNum: 1,
@@ -155,6 +179,7 @@ export default {
       'abolishPapers',
     ]),
     onSearch() {
+      this.pageNum = 1;
       this.getPaperList({
         pageNum: this.pageNum,
         ...this.queryForm
@@ -164,6 +189,16 @@ export default {
       }).catch(err => {
         this.$message.error(err);
       })
+    },
+    onReset() {
+      this.queryForm = {
+        title: '',
+        department: '',
+        grade: '',
+        release_time: [],
+        implement_time: [],
+        status: '',
+      }
     },
     handleCurrentChange() {
       this.getPaperList({
