@@ -33,10 +33,14 @@ export const updatePaperByIdAPI = (id, data) => {
 }
 
 export const getAPI = (data) => {
+  let params = new URLSearchParams();
+  for (let key in data) {
+    params.append(key, data[key]);
+  }
   return HttpRequest.request({
     url: `${api.paperPre}/get`,
     method: 'GET',
-    params: data
+    params
   })
 }
 
