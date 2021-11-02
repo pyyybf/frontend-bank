@@ -203,9 +203,13 @@ export default {
   mounted() {
     if (this.$route.query.paperId > 0) {
       this.getPaperById(this.$route.query.paperId).then(res => {
+        var interpret_department = res.interpret_department.split(',');
+        if (interpret_department[0] === '') {
+          interpret_department.pop();
+        }
         this.analyseForm = {
           ...res,
-          interpret_department: res.interpret_department.split(',')
+          interpret_department: interpret_department
         };
       }).catch(err => {
         this.$message.error(err);
@@ -219,9 +223,13 @@ export default {
         if (val > 0) {
           this.id = this.$route.query.paperId;
           this.getPaperById(this.id).then(res => {
+            var interpret_department = res.interpret_department.split(',');
+            if (interpret_department[0] === '') {
+              interpret_department.pop();
+            }
             this.analyseForm = {
               ...res,
-              interpret_department: res.interpret_department.split(',')
+              interpret_department: interpret_department
             };
           }).catch(err => {
             this.$message.error(err);

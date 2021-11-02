@@ -23,9 +23,9 @@ const appendix = {
     },
     uploadAppendix({}, data) {
       return new Promise((resolve, reject) => {
-        uploadAppendixAPI(data).then(response => {
+        uploadAppendixAPI(data.paperId, data.appendixForm).then(response => {
           if (response.data.success) {
-            resolve('上传成功');
+            resolve('附件上传成功');
           } else {
             reject(response.data.message);
           }

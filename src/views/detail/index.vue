@@ -17,7 +17,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="发文部门" prop="department">
-            <el-select v-model="paperForm.department" placeholder="请选择发文部门" style="width:95%;float: left">
+            <el-select v-model="paperForm.department"
+                       multiple
+                       placeholder="请选择发文部门"
+                       style="width:95%;float: left">
               <el-option
                 v-for="item in departmentOptions"
                 :key="item.value"
@@ -102,7 +105,7 @@
               :on-exceed="handleExceed"
               :file-list="fileList"
               style="width: 95%;float: left">
-              <el-button size="small" type="primary" style="float: left">点击上传</el-button>
+              <el-button size="small" type="primary" icon="el-icon-upload2" style="float: left">点击上传</el-button>
             </el-upload>
           </el-form-item>
         </el-col>
@@ -120,11 +123,18 @@
         &nbsp;&nbsp;{{ '附件管理' }}
       </template>
       <template slot="extra">
-        <el-button type="primary" size="small">添加附件</el-button>
+        <el-upload
+          action="#"
+          :http-request="handleUploadAppendix"
+          :file-list="appendixFileList"
+          :show-file-list="false"
+          style="width: 95%;float: left">
+          <el-button size="small" type="primary" icon="el-icon-upload2" style="float: left">添加附件</el-button>
+        </el-upload>
       </template>
     </el-descriptions>
     <el-table
-      :data="attachmentList"
+      :data="appendixList"
       style="width: 100%;margin-bottom: 100px">
       <el-table-column
         label="附件名称"
@@ -167,7 +177,7 @@ export default {
         title: '',
         number: '',
         category: '',
-        department: '',
+        department: [],
         grade: '',
         release_time: '',
         implement_time: '',
@@ -179,11 +189,8 @@ export default {
         analyse_status: '',
       },
       fileList: [],
-      attachmentList: [{
-        name: '附件一',
-        size: 23,
-        creator: '超级管理员',
-      }],
+      appendixFileList: [],
+      appendixList: [],
       paperRules: {
         title: [{
           required: true,
@@ -272,12 +279,27 @@ export default {
         },
       ],
       departmentOptions: [
-        {
-          value: '银监会'
-        },
-        {
-          value: '人民银行'
-        },
+        {value: '中国银行业监督管理委员会'},
+        {value: '国家外汇管理局'},
+        {value: '国务院国有资产监督管理委员会'},
+        {value: '发展改革委'},
+        {value: '国家税务总局'},
+        {value: '中国银行保险监督管理委员会'},
+        {value: '民政部'},
+        {value: '国家认证认可监督管理委员会'},
+        {value: '中华人民共和国国家发展和改革委员会'},
+        {value: '工商总局'},
+        {value: '改革委员会'},
+        {value: '公安部'},
+        {value: '中国证券监督管理委员会'},
+        {value: '扶贫办'},
+        {value: '商务部'},
+        {value: '工业和信息化部'},
+        {value: '中国人民银行'},
+        {value: '财政部'},
+        {value: '人力资源社会保障部办公厅'},
+        {value: '海关总署'},
+        {value: '国务院'},
       ],
       saveLoading: false,
     }
@@ -301,11 +323,21 @@ export default {
         if (interpret_department[0] === '') {
           interpret_department.pop();
         }
+        var department = res.department.split(',');
+        if (department[0] === '') {
+          department.pop();
+        }
         this.paperForm = {
           ...res,
           content: null,
-          interpret_department: interpret_department
+          interpret_department: interpret_department,
+          department: department
         };
+      }).catch(err => {
+        this.$message.error(err);
+      })
+      this.getAppendixList(this.$route.query.paperId).then(res => {
+        this.appendixList = res;
       }).catch(err => {
         this.$message.error(err);
       })
@@ -321,9 +353,14 @@ export default {
             if (interpret_department[0] === '') {
               interpret_department.pop();
             }
+            var department = res.department.split(',');
+            if (department[0] === '') {
+              department.pop();
+            }
             this.paperForm = {
               ...res,
               interpret_department: interpret_department,
+              department: department,
               content: null
             };
           }).catch(err => {
@@ -335,7 +372,7 @@ export default {
             title: '',
             number: '',
             category: '',
-            department: '',
+            department: [],
             grade: '',
             release_time: '',
             implement_time: '',
@@ -355,6 +392,9 @@ export default {
       'getPaperById',
       'addPaper',
       'updatePaperById',
+      'getAppendixList',
+      'uploadAppendix',
+      'deleteAppendix'
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -379,7 +419,7 @@ export default {
       formData.append('title', this.paperForm.title);
       formData.append('number', this.paperForm.number);
       formData.append('category', this.paperForm.category);
-      formData.append('department', this.paperForm.department);
+      formData.append('department', this.paperForm.department.join(','));
       formData.append('grade', this.paperForm.grade);
       formData.append('release_time', this.paperForm.release_time.substring(0, 10));
       formData.append('implement_time', this.paperForm.implement_time.substring(0, 10));
@@ -393,18 +433,49 @@ export default {
         this.updatePaperById({
           id: this.id,
           paperForm: formData
-        }).then(res => {
-          this.$message.success(res);
-          this.$router.push({path: '/manage'});
+        }).then(res1 => {
+          if (this.appendixFileList.length > 0) {
+            var appendixForm = new FormData();
+            for (var file of this.appendixFileList) {
+              appendixForm.append('appendixFile', file);
+            }
+            this.uploadAppendix({
+              paperId: this.id,
+              appendixForm: appendixForm
+            }).then(res2 => {
+              this.appendixFileList = [];
+              this.saveLoading = false;
+              this.$message.success(res1);
+              this.$router.push({path: '/manage'});
+            }).catch(err => {
+              this.$message.error(err);
+            })
+          } else {
+            this.saveLoading = false;
+            this.$message.success(res1);
+            this.$router.push({path: '/manage'});
+          }
         }).catch(err => {
           this.$message.error(err);
         }).finally(() => {
           this.saveLoading = false;
         })
       } else {
-        this.addPaper(formData).then(res => {
-          this.$message.success(res);
-          this.$router.push({path: '/manage'});
+        this.addPaper(formData).then(paperId => {
+          var appendixForm = new FormData();
+          for (var file of this.appendixFileList) {
+            appendixForm.append('appendixFile', file);
+          }
+          this.uploadAppendix({
+            paperId: paperId,
+            appendixForm: appendixForm
+          }).then(res => {
+            this.saveLoading = false;
+            this.$message.success(res);
+            this.$router.push({path: '/manage'});
+          }).catch(err => {
+            this.$message.error(err);
+          })
         }).catch(err => {
           this.$message.error(err);
         }).finally(() => {
@@ -417,7 +488,7 @@ export default {
         title: '',
         number: '',
         category: '',
-        department: '',
+        department: [],
         grade: '',
         release_time: '',
         implement_time: '',
@@ -427,6 +498,43 @@ export default {
         content: null,
         status: false,
         analyse_status: false,
+      }
+    },
+    handleUploadAppendix(params) {
+      this.appendixFileList.push(params.file);
+      this.appendixList.push({
+        name: params.file.name,
+        size: Math.floor(params.file.size * 100 / 1024) / 100,
+        creator: localStorage.getItem('username')
+      })
+    },
+    handleDelete(index, row) {
+      if (this.id > 0) {  //编辑
+        this.deleteAppendix({id: row.id}).then(res1 => {
+          this.$message.success(res1);
+          this.getAppendixList(this.$route.query.paperId).then(res2 => {
+            // console.log(res)
+            this.appendixList = res2;
+          }).catch(err => {
+            this.$message.error(err);
+          })
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      } else {  //新增
+        this.appendixFileList.splice(index, 1);
+        this.appendixList.splice(index, 1);
+      }
+    },
+    handleDownload(index, row) {
+      if (this.id > 0) {  //编辑
+        //TODO
+      } else {  //新增
+        let aTag = document.createElement('a');  //创建一个a标签
+        aTag.download = this.appendixFileList[index].name;
+        let href = URL.createObjectURL(this.appendixFileList[index]);  //获取url
+        aTag.href = href;
+        aTag.click();
       }
     },
   },

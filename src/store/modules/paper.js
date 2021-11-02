@@ -17,7 +17,6 @@ const user = {
       return new Promise((resolve, reject) => {
         getAPI(data).then(response => {
           if (response.data.success) {
-            console.log(response.data.content)
             resolve(response.data.content);
           } else {
             reject(response.data.message);
@@ -31,7 +30,7 @@ const user = {
       return new Promise((resolve, reject) => {
         addPaperAPI(data).then(response => {
           if (response.data.success) {
-            resolve('添加成功');
+            resolve(response.data.content);
           } else {
             reject(response.data.message);
           }
