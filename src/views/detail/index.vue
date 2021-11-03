@@ -395,8 +395,6 @@ export default {
       this.paperForm.content = params.file;
     },
     save() {
-      console.log(this.appendixFileList)
-      console.log(this.appendixList)
       this.saveLoading = true;
       var date = new Date();
 
@@ -445,12 +443,12 @@ export default {
               })
             } else {
               this.saveLoading = false;
-              this.$message.success('外规内化成功');
+              this.$message.success('更新成功');
               this.$router.push({path: '/manage'});
             }
           } else {
             this.saveLoading = false;
-            this.$message.success(res1);
+            this.$message.success('更新成功');
             this.$router.push({path: '/manage'});
           }
         }).catch(err => {
@@ -479,14 +477,14 @@ export default {
               appendixForm: appendixForm
             }).then(res => {
               this.saveLoading = false;
-              this.$message.success('外规内化成功');
+              this.$message.success('新增成功');
               this.$router.push({path: '/manage'});
             }).catch(err => {
               this.$message.error(err);
             })
           } else {
             this.saveLoading = false;
-            this.$message.success('外规内化成功');
+            this.$message.success('新增成功');
             this.$router.push({path: '/manage'});
           }
         }).catch(err => {

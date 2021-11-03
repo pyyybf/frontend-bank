@@ -52,7 +52,6 @@ export default {
   },
   mounted() {
     this.getStatisticalData().then(res => {
-      console.log(res)
       var chartDomCategoryPie = document.getElementById('category-pie');
       var myChartCategoryPie = echarts.init(chartDomCategoryPie);
       var optionCategoryPie;
