@@ -9,12 +9,12 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="法规标题">
-                <el-input v-model="queryForm.title" placeholder="请输入法规标题" class="form-item"></el-input>
+                <el-input v-model="queryForm.title" placeholder="请输入法规标题" class="query-form-item"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力等级">
-                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="form-item">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="query-form-item">
                   <el-option
                     v-for="item in gradeOptions"
                     :key="item.value"
@@ -26,7 +26,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发布时间">
-                <el-date-picker class="form-item"
+                <el-date-picker style="width:90%"
                                 v-model="queryForm.release_time"
                                 type="daterange"
                                 value-format="yyyy-MM-dd"
@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="实施时间">
-                <el-date-picker class="form-item"
+                <el-date-picker style="width:90%"
                                 v-model="queryForm.implement_time"
                                 type="daterange"
                                 value-format="yyyy-MM-dd"
@@ -50,7 +50,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="发文部门">
-                <el-select v-model="queryForm.department" multiple placeholder="请选择发文部门" class="form-item">
+                <el-select v-model="queryForm.department" multiple placeholder="请选择发文部门" class="query-form-item">
                   <el-option
                     v-for="item in departmentOptions"
                     :key="item.value"
@@ -62,7 +62,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.status" placeholder="请选择状态" class="form-item">
+                <el-select v-model="queryForm.status" placeholder="请选择状态" class="query-form-item">
                   <el-option label="已发布" :value="true"></el-option>
                   <el-option label="未发布" :value="false"></el-option>
                 </el-select>
@@ -330,7 +330,7 @@ export default {
   margin-top: 10px;
 }
 
-.form-item {
+.query-form-item {
   width: 90%;
 }
 
