@@ -7,6 +7,7 @@ import {
   abolishPapersAPI,
   getPaperByIdAPI,
   getStatisticalDataAPI,
+  getRecentAnalyzedPapersAPI,
 } from "@/api/paper";
 
 const paper = {
@@ -95,6 +96,17 @@ const paper = {
     getStatisticalData({}) {
       return new Promise((resolve, reject) => {
         getStatisticalDataAPI().then(response => {
+          if (response.data.success) {
+            resolve(response.data.content);
+          } else {
+            reject(response.data.message);
+          }
+        })
+      })
+    },
+    getRecentAnalyzedPapers({}) {
+      return new Promise((resolve, reject) => {
+        getRecentAnalyzedPapersAPI().then(response => {
           if (response.data.success) {
             resolve(response.data.content);
           } else {

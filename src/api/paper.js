@@ -77,3 +77,10 @@ export const getStatisticalDataAPI = () => {
     method: 'GET'
   })
 }
+
+export const getRecentAnalyzedPapersAPI = () => {
+  return HttpRequest.request({
+    url: `${api.paperPre}/getRecentAnalyzed`,
+    method: 'GET'
+  })
+}
