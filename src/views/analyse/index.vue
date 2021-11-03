@@ -358,6 +358,11 @@ export default {
           this.saveLoading = false;
         })
       } else {  //新增内化
+        if (this.analyseForm.content === null) {
+          this.$message.error('请上传正文');
+          this.saveLoading = false;
+          return;
+        }
         this.addAnalyse(formData).then(analyseId => {
           var appendixForm = new FormData();
           var count = 0;

@@ -184,7 +184,7 @@ export default {
         interpret_department: [],
         input_user: '',
         input_time: '',
-        content: '',
+        content: null,
         status: '',
         analyse_id: '',
       },
@@ -459,6 +459,11 @@ export default {
           this.saveLoading = false;
         })
       } else {
+        if (this.paperForm.content === null) {
+          this.$message.error('请上传正文');
+          this.saveLoading = false;
+          return;
+        }
         this.addPaper(formData).then(paperId => {
           var appendixForm = new FormData();
           var count = 0;
