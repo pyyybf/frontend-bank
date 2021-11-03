@@ -4,6 +4,6 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:8080',
-    pro: ''
+    pro: 'http://106.15.42.179:8080'
   }
 }
