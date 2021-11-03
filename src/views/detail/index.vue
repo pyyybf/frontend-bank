@@ -186,7 +186,7 @@ export default {
         input_time: '',
         content: '',
         status: '',
-        analyse_status: '',
+        analyse_id: '',
       },
       fileList: [],
       appendixFileList: [],
@@ -234,49 +234,23 @@ export default {
         }],
       },
       interpretDepartmentOptions: [
-        {
-          value: '合规部'
-        },
-        {
-          value: '风险部'
-        },
-        {
-          value: '信用卡部'
-        },
+        {value: '合规部'},
+        {value: '风险部'},
+        {value: '信用卡部'},
       ],
       categoryOptions: [
-        {
-          value: '法律'
-        },
-        {
-          value: '行政法规'
-        },
-        {
-          value: '部门规章'
-        },
-        {
-          value: '规范性文件'
-        },
-        {
-          value: '其他文件'
-        },
+        {value: '法律'},
+        {value: '行政法规'},
+        {value: '部门规章'},
+        {value: '规范性文件'},
+        {value: '其他文件'},
       ],
       gradeOptions: [
-        {
-          value: '法律'
-        },
-        {
-          value: '行政法规'
-        },
-        {
-          value: '部门规章'
-        },
-        {
-          value: '规范性文件'
-        },
-        {
-          value: '其他文件'
-        },
+        {value: '法律'},
+        {value: '行政法规'},
+        {value: '部门规章'},
+        {value: '规范性文件'},
+        {value: '其他文件'},
       ],
       departmentOptions: [
         {value: '中国银行业监督管理委员会'},
@@ -381,7 +355,7 @@ export default {
             input_time: '',
             content: null,
             status: false,
-            analyse_status: false,
+            analyse_id: -1,
           };
         }
       }
@@ -394,7 +368,8 @@ export default {
       'updatePaperById',
       'getAppendixList',
       'uploadAppendix',
-      'deleteAppendix'
+      'deleteAppendix',
+      'downloadAppendix'
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -427,7 +402,7 @@ export default {
       formData.append('input_user', this.userId);
       formData.append('input_time', date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
       formData.append('status', this.paperForm.status);
-      formData.append('analyse_status', this.paperForm.analyse_status);
+      formData.append('analyse_id', this.paperForm.analyse_id);
 
       if (this.id > 0) {
         this.updatePaperById({
@@ -497,7 +472,7 @@ export default {
         input_time: '',
         content: null,
         status: false,
-        analyse_status: false,
+        analyse_id: -1,
       }
     },
     handleUploadAppendix(params) {
@@ -528,13 +503,26 @@ export default {
     },
     handleDownload(index, row) {
       if (this.id > 0) {  //编辑
-        //TODO
+        this.downloadAppendix(row.id).then(res => {
+          var blob = res;
+          if (window.navigator.msSaveOrOpenBlob) {			// IE浏览器下
+            navigator.msSaveBlob(blob, row.name);
+          } else {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = row.name;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+          }
+        }).catch(err => {
+          this.$message.error(err);
+        })
       } else {  //新增
-        let aTag = document.createElement('a');  //创建一个a标签
-        aTag.download = this.appendixFileList[index].name;
-        let href = URL.createObjectURL(this.appendixFileList[index]);  //获取url
-        aTag.href = href;
-        aTag.click();
+        var link = document.createElement('a');  //创建一个a标签
+        link.href = URL.createObjectURL(this.appendixFileList[index]);
+        link.download = this.appendixFileList[index].name;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
       }
     },
   },

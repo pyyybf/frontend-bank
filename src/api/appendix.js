@@ -26,3 +26,11 @@ export const deleteAppendixAPI = (data) => {
     method: 'DELETE'
   })
 }
+
+export const downloadAppendixAPI = (data) => {
+  return HttpRequest.request({
+    url: `${api.appendixPre}/downloadAppendix/${data}`,
+    method: 'POST',
+    responseType: 'blob'
+  })
+}

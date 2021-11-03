@@ -7,9 +7,10 @@ import {
   abolishPapersAPI,
   getPaperByIdAPI,
   analyzePaperByIdAPI,
+  getStatisticalDataAPI,
 } from "@/api/paper";
 
-const user = {
+const paper = {
   state: {},
   mutations: {},
   actions: {
@@ -103,6 +104,17 @@ const user = {
         })
       })
     },
+    getStatisticalData({}) {
+      return new Promise((resolve, reject) => {
+        getStatisticalDataAPI().then(response => {
+          if (response.data.success) {
+            resolve(response.data.content);
+          } else {
+            reject(response.data.message);
+          }
+        })
+      })
+    }
   }
 };
-export default user;
+export default paper;

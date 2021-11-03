@@ -4,6 +4,7 @@ import getters from './getters'
 import user from './modules/user'
 import paper from './modules/paper'
 import appendix from './modules/appendix'
+import analyse from './modules/analyse'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ const store = new Vuex.Store({
     user,
     paper,
     appendix,
+    analyse,
   },
   getters
 })

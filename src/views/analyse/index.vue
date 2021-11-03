@@ -78,7 +78,7 @@
       </template>
     </el-descriptions>
     <el-table
-      :data="attachmentList"
+      :data="appendixList"
       style="width: 100%;margin-bottom: 100px">
       <el-table-column
         label="附件名称"
@@ -122,14 +122,13 @@ export default {
         number: '',
         category: '',
         interpret_department: [],
+        input_user: -1,
+        input_time: '',
         content: '',
+        paper_id: -1
       },
       fileList: [],
-      attachmentList: [{
-        name: '附件一',
-        size: 23,
-        creator: '超级管理员',
-      }],
+      appendixList: [],
       paperRules: {
         title: [{
           required: true,
@@ -194,14 +193,32 @@ export default {
     ])
   },
   created() {
-    if (this.$route.query.paperId > 0) {
-      this.id = this.$route.query.paperId;
+    if (this.$route.query.analyseId > 0) {
+      this.id = this.$route.query.analyseId;
     } else {
       this.id = -1;
     }
   },
   mounted() {
-    if (this.$route.query.paperId > 0) {
+    if (this.$route.query.analyseId > 0) {
+      this.getAnalyseById(this.$route.query.analyseId).then(res => {
+        var interpret_department = res.interpret_department.split(',');
+        if (interpret_department[0] === '') {
+          interpret_department.pop();
+        }
+        this.analyseForm = {
+          ...res,
+          interpret_department: interpret_department
+        };
+      }).catch(err => {
+        this.$message.error(err);
+      })
+      this.getAppendixList(-this.$route.query.analyseId).then(res => {
+        this.appendixList = res;
+      }).catch(err => {
+        this.$message.error(err);
+      })
+    } else {
       this.getPaperById(this.$route.query.paperId).then(res => {
         var interpret_department = res.interpret_department.split(',');
         if (interpret_department[0] === '') {
@@ -214,15 +231,20 @@ export default {
       }).catch(err => {
         this.$message.error(err);
       })
+      // this.getAppendixList(this.$route.query.paperId).then(res => {
+      //   this.appendixList = res;
+      // }).catch(err => {
+      //   this.$message.error(err);
+      // })
     }
   },
   watch: {
-    '$route.query.paperId'(val) {
-      if (this.$route.path.includes('detail')) {
+    '$route.query.analyseId'(val) {
+      if (this.$route.path.includes('analyse')) {
         // console.log(val)
         if (val > 0) {
-          this.id = this.$route.query.paperId;
-          this.getPaperById(this.id).then(res => {
+          this.id = this.$route.query.analyseId;
+          this.getAnalyseById(this.id).then(res => {
             var interpret_department = res.interpret_department.split(',');
             if (interpret_department[0] === '') {
               interpret_department.pop();
@@ -234,15 +256,24 @@ export default {
           }).catch(err => {
             this.$message.error(err);
           })
+          this.getAppendixList(this.$route.query.paperId).then(res => {
+            this.appendixList = res;
+          }).catch(err => {
+            this.$message.error(err);
+          })
         } else {
-          this.id = -1;
-          this.analyseForm = {
-            title: '',
-            number: '',
-            category: '',
-            interpret_department: [],
-            content: '',
-          };
+          this.getPaperById(this.$route.query.paperId).then(res => {
+            var interpret_department = res.interpret_department.split(',');
+            if (interpret_department[0] === '') {
+              interpret_department.pop();
+            }
+            this.analyseForm = {
+              ...res,
+              interpret_department: interpret_department
+            };
+          }).catch(err => {
+            this.$message.error(err);
+          })
         }
       }
     }
@@ -251,6 +282,8 @@ export default {
     ...mapActions([
       'getPaperById',
       'analyzePaperById',
+      'getAppendixList',
+      'getAnalyseById'
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -292,15 +325,11 @@ export default {
         title: '',
         number: '',
         category: '',
-        department: '',
-        grade: '',
-        release_time: '',
-        implement_time: '',
         interpret_department: [],
-        input_user: '',
+        input_user: -1,
         input_time: '',
         content: '',
-        status: '',
+        paper_id: -1
       }
     },
   },

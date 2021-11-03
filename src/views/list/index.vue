@@ -132,14 +132,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="analyse_status"
+        prop="analyse_id"
         label="外规内化状态"
         width="120"
         header-align="center"
         align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.analyse_status ? 'primary' : 'info'">{{
-              scope.row.analyse_status ? '已内化' : '未内化'
+          <el-tag :type="scope.row.analyse_id>0 ? 'primary' : 'info'">{{
+              scope.row.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>
         </template>
@@ -188,8 +188,8 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="外规内化状态" :span="2">
-          <el-tag :type="currentPaper.analyse_status ? 'primary' : 'info'">{{
-              currentPaper.analyse_status ? '已内化' : '未内化'
+          <el-tag :type="currentPaper.analyse_id>0 ? 'primary' : 'info'">{{
+              currentPaper.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>
         </el-descriptions-item>

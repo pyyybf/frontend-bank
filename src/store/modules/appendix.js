@@ -1,7 +1,8 @@
 import {
   getAppendixListAPI,
   uploadAppendixAPI,
-  deleteAppendixAPI
+  deleteAppendixAPI,
+  downloadAppendixAPI
 } from "@/api/appendix";
 
 const appendix = {
@@ -37,6 +38,17 @@ const appendix = {
         deleteAppendixAPI(data).then(response => {
           if (response.data.success) {
             resolve('删除成功');
+          } else {
+            reject(response.data.message);
+          }
+        })
+      })
+    },
+    downloadAppendix({}, data) {
+      return new Promise((resolve, reject) => {
+        downloadAppendixAPI(data).then(response => {
+          if (response.status === 200) {
+            resolve(response.data)
           } else {
             reject(response.data.message);
           }
