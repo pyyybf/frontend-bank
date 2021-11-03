@@ -287,7 +287,8 @@ export default {
       'getAnalyseById',
       'updateAnalyse',
       'deleteAppendix',
-      'uploadAppendix'
+      'uploadAppendix',
+      'downloadAppendix'
     ]),
     goBack() {
       this.$router.push({path: '/manage'});
@@ -321,25 +322,31 @@ export default {
           id: this.id,
           analyseForm: formData
         }).then(res => {
-          var appendixForm = new FormData();
-          var count = 0;
-          for (var file of this.appendixFileList) {
-            if (file !== null) {
-              appendixForm.append('appendixFile', file);
-              count++;
+          if (this.appendixFileList.length > 0) {
+            var appendixForm = new FormData();
+            var count = 0;
+            for (var file of this.appendixFileList) {
+              if (file !== null) {
+                appendixForm.append('appendixFile', file);
+                count++;
+              }
             }
-          }
-          if (count > 0) {
-            this.uploadAppendix({
-              paperId: -this.id,
-              appendixForm: appendixForm
-            }).then(res => {
+            if (count > 0) {
+              this.uploadAppendix({
+                paperId: -this.id,
+                appendixForm: appendixForm
+              }).then(res => {
+                this.saveLoading = false;
+                this.$message.success('更新成功');
+                this.$router.push({path: '/manage'});
+              }).catch(err => {
+                this.$message.error(err);
+              })
+            } else {
               this.saveLoading = false;
               this.$message.success('更新成功');
               this.$router.push({path: '/manage'});
-            }).catch(err => {
-              this.$message.error(err);
-            })
+            }
           } else {
             this.saveLoading = false;
             this.$message.success('更新成功');
