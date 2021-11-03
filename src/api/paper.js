@@ -26,7 +26,7 @@ export const delPapersAPI = (data) => {
 export const updatePaperByIdAPI = (id, data) => {
   return HttpRequest.request({
     url: `${api.paperPre}/update/${id}`,
-    method: 'POST',
+    method: 'PUT',
     headers: {'Content-Type': 'multipart/form-data'},
     data
   })
