@@ -138,7 +138,7 @@
         header-align="center"
         align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.analyse_id>0 ? 'primary' : 'info'">{{
+          <el-tag :type="scope.row.analyse_id>0 ? 'success' : 'info'">{{
               scope.row.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>
@@ -188,7 +188,7 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="外规内化状态" :span="2">
-          <el-tag :type="currentPaper.analyse_id>0 ? 'primary' : 'info'">{{
+          <el-tag :type="currentPaper.analyse_id>0 ? 'success' : 'info'">{{
               currentPaper.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>

@@ -152,7 +152,7 @@
         header-align="center"
         align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.analyse_id>0 ? 'primary' : 'info'">{{
+          <el-tag :type="scope.row.analyse_id>0 ? 'success' : 'info'">{{
               scope.row.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>
@@ -194,7 +194,9 @@
         <el-descriptions-item label="效力等级" :span="1">{{ currentPaper.grade }}</el-descriptions-item>
         <el-descriptions-item label="解读部门" :span="1">{{ currentPaper.interpret_department }}</el-descriptions-item>
         <el-descriptions-item label="录入人" :span="1">{{ currentPaper.input_user }}</el-descriptions-item>
-        <el-descriptions-item label="录入时间" :span="1">{{ currentPaper.input_time }}</el-descriptions-item>
+        <el-descriptions-item label="录入时间" :span="1">
+          {{ currentPaper.input_time ? currentPaper.input_time.substring(0, 10) : '' }}
+        </el-descriptions-item>
         <el-descriptions-item label="状态" :span="1">
           <el-tag :type="currentPaper.status ? 'success' : 'warning'">{{
               currentPaper.status ? '已发布' : '未发布'
@@ -202,7 +204,7 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="外规内化状态" :span="2">
-          <el-tag :type="currentPaper.analyse_id>0 ? 'primary' : 'info'">{{
+          <el-tag :type="currentPaper.analyse_id>0 ? 'success' : 'info'">{{
               currentPaper.analyse_id > 0 ? '已内化' : '未内化'
             }}
           </el-tag>
@@ -210,6 +212,33 @@
         <el-descriptions-item label="正文" :span="2">
           <div class="card-text">
             <p v-for="paragraph in currentPaper.content?currentPaper.content.split('\n'):''"
+               style="margin: 0">{{ paragraph }}</p>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+
+      <el-descriptions v-if="currentPaper.analyse_id>0"
+                       title="外规内化结果"
+                       style="padding: 20px"
+                       :column="2"
+                       :label-style="{fontWeight:'bold'}"
+                       direction="vertical"
+                       border
+                       :colon="false">
+        <el-descriptions-item label="法规标题" :span="2">{{ currentPaper.analyse.title }}</el-descriptions-item>
+        <el-descriptions-item label="法规文号" :span="2">{{ currentPaper.analyse.number }}</el-descriptions-item>
+        <el-descriptions-item label="外规类别" :span="1">{{ currentPaper.analyse.category }}</el-descriptions-item>
+        <el-descriptions-item label="解读部门" :span="1">{{
+            currentPaper.analyse.interpret_department
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="录入人" :span="1">{{ currentPaper.analyse.input_user }}</el-descriptions-item>
+        <el-descriptions-item label="录入时间" :span="1">
+          {{ currentPaper.analyse.input_time ? currentPaper.analyse.input_time.substring(0, 10) : '' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="正文" :span="2">
+          <div class="card-text">
+            <p v-for="paragraph in currentPaper.analyse.content?currentPaper.analyse.content.split('\n'):''"
                style="margin: 0">{{ paragraph }}</p>
           </div>
         </el-descriptions-item>
@@ -239,49 +268,23 @@ export default {
       ids: [],
       loading: false,
       interpretDepartmentOptions: [
-        {
-          value: '合规部'
-        },
-        {
-          value: '风险部'
-        },
-        {
-          value: '信用卡部'
-        },
+        {value: '合规部'},
+        {value: '风险部'},
+        {value: '信用卡部'},
       ],
       categoryOptions: [
-        {
-          value: '法律'
-        },
-        {
-          value: '行政法规'
-        },
-        {
-          value: '部门规章'
-        },
-        {
-          value: '规范性文件'
-        },
-        {
-          value: '其他文件'
-        },
+        {value: '法律'},
+        {value: '行政法规'},
+        {value: '部门规章'},
+        {value: '规范性文件'},
+        {value: '其他文件'},
       ],
       gradeOptions: [
-        {
-          value: '法律'
-        },
-        {
-          value: '行政法规'
-        },
-        {
-          value: '部门规章'
-        },
-        {
-          value: '规范性文件'
-        },
-        {
-          value: '其他文件'
-        },
+        {value: '法律'},
+        {value: '行政法规'},
+        {value: '部门规章'},
+        {value: '规范性文件'},
+        {value: '其他文件'},
       ],
       departmentOptions: [
         {value: '中国银行业监督管理委员会'},
@@ -320,6 +323,7 @@ export default {
       'publishPapers',
       'abolishPapers',
       'getPaperById',
+      'getAnalyseById'
     ]),
     handleSelectionChange(val) {
       this.ids = [];
@@ -365,7 +369,16 @@ export default {
     handleRowClick(row) {
       this.getPaperById(row.id).then(res => {
         this.currentPaper = res;
-        this.drawer = true;
+        if (this.currentPaper.analyse_id > 0) {
+          this.getAnalyseById(this.currentPaper.analyse_id).then(analyseData => {
+            this.currentPaper.analyse = analyseData;
+            this.drawer = true;
+          }).catch(err => {
+            this.$message.error(err);
+          })
+        } else {
+          this.drawer = true;
+        }
       }).catch(err => {
         this.$message.error(err);
       })
@@ -436,12 +449,18 @@ export default {
       } else if (this.ids.length > 1) {
         this.$message.warning('只能选择一条法规进行外规内化');
       } else {
-        this.$router.push({
-          path: '/analyse',
-          query: {
-            paperId: this.ids[0]
+        for (let paper of this.paperList) {
+          if (paper.id === this.ids[0]) {
+            this.$router.push({
+              path: '/analyse',
+              query: {
+                paperId: paper.id,
+                analyseId: paper.analyse_id
+              }
+            });
+            break;
           }
-        });
+        }
       }
     },
     analyseResult() {

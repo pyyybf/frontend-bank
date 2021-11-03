@@ -1,8 +1,23 @@
 <template>
-  <div>
-    <div id="category-pie" style="width:600px;height:300px"></div>
-    <div id="year-line" style="width:600px;height:300px"></div>
-  </div>
+  <el-row>
+    <h1 style="text-align: left">工作台</h1>
+    <el-col :span="12" class="chart-box">
+      <el-card>
+        <div slot="header" class="clearfix">
+          <span>法规分类统计</span>
+        </div>
+        <div id="category-pie" class="chart"></div>
+      </el-card>
+    </el-col>
+    <el-col :span="12" class="chart-box">
+      <el-card>
+        <div slot="header" class="clearfix">
+          <span>法规年度统计</span>
+        </div>
+        <div id="year-line" class="chart"></div>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -43,11 +58,6 @@ export default {
       var optionCategoryPie;
 
       optionCategoryPie = {
-        // title: {
-        //   text: 'Referer of a Website',
-        //   subtext: 'Fake Data',
-        //   left: 'center'
-        // },
         tooltip: {
           trigger: 'item'
         },
@@ -57,7 +67,7 @@ export default {
         },
         series: [
           {
-            name: 'Access From',
+            // name: 'Access From',
             type: 'pie',
             radius: '50%',
             data: res.categoryPie,
@@ -87,7 +97,8 @@ export default {
           data: res.yearLine.filter(item => item.name != 1970).map(item => item.name)
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          name: '发布法规数'
         },
         series: [
           {
@@ -109,5 +120,12 @@ export default {
 </script>
 
 <style scoped>
+.chart-box {
+  padding: 10px;
+}
 
+.chart {
+  width: 100%;
+  height: 300px;
+}
 </style>

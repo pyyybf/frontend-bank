@@ -6,7 +6,6 @@ import {
   publishPapersAPI,
   abolishPapersAPI,
   getPaperByIdAPI,
-  analyzePaperByIdAPI,
   getStatisticalDataAPI,
 } from "@/api/paper";
 
@@ -87,17 +86,6 @@ const paper = {
         getPaperByIdAPI(data).then(response => {
           if (response.data.success) {
             resolve(response.data.content);
-          } else {
-            reject(response.data.message);
-          }
-        })
-      })
-    },
-    analyzePaperById({}, data) {
-      return new Promise((resolve, reject) => {
-        analyzePaperByIdAPI(data.id, data.analyseForm).then(response => {
-          if (response.data.success) {
-            resolve('外规内化成功');
           } else {
             reject(response.data.message);
           }
