@@ -1,6 +1,7 @@
 <template>
   <el-row>
-    <h1 style="text-align: left">工作台</h1>
+    <h1 style="text-align: left">&nbsp;&nbsp;工作台</h1>
+    <el-divider></el-divider>
     <el-col :span="12" class="chart-box">
       <el-card>
         <div slot="header" class="clearfix">
