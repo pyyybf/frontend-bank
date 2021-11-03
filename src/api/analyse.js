@@ -23,7 +23,7 @@ export const addAnalyseAPI = (data) => {
 export const updateAnalyseByIdAPI = (id, data) => {
   return HttpRequest.request({
     url: `${api.analysePre}/update/${id}`,
-    method: 'POST',
+    method: 'PUT',
     headers: {'Content-Type': 'multipart/form-data'},
     data
   })

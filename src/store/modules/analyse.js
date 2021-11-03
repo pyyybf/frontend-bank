@@ -1,5 +1,4 @@
-import {getAnalyseByIdAPI} from "@/api/analyse";
-import {addAnalyseAPI, updateAnalyseByIdAPI} from "../../api/analyse";
+import {getAnalyseByIdAPI, addAnalyseAPI, updateAnalyseByIdAPI} from "@/api/analyse";
 
 const analyse = {
   state: {},
