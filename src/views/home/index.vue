@@ -88,13 +88,23 @@ export default {
       var myChartYearLine = echarts.init(chartDomYearLine);
       var optionYearLine;
 
+      var yearLineData = res.yearLine.sort((x, y) => {
+        if (Number(x.name) < Number(y.name)) {
+          return -1;
+        } else if (Number(x.name) > Number(y.name)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
       optionYearLine = {
         tooltip: {
           trigger: 'item'
         },
         xAxis: {
           type: 'category',
-          data: res.yearLine.filter(item => item.name != 1970).map(item => item.name)
+          data: yearLineData.filter(item => item.name != 1970).map(item => item.name)
         },
         yAxis: {
           type: 'value',
@@ -102,13 +112,15 @@ export default {
         },
         series: [
           {
-            data: res.yearLine.filter(item => item.name != 1970).map(item => item.value),
+            data: yearLineData.filter(item => item.name != 1970).map(item => item.value),
             type: 'line'
           }
         ]
       };
 
       optionYearLine && myChartYearLine.setOption(optionYearLine);
+    }).catch(err => {
+      this.$message.error(err);
     })
   },
   methods: {
