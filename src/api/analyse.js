@@ -28,3 +28,11 @@ export const updateAnalyseByIdAPI = (id, data) => {
     data
   })
 }
+
+export const downloadResultFileAPI = (data) => {
+  return HttpRequest.request({
+    url: `${api.analysePre}/downloadResultFile/${data}`,
+    method: 'POST',
+    responseType: 'blob'
+  })
+}

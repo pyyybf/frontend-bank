@@ -323,7 +323,8 @@ export default {
       'publishPapers',
       'abolishPapers',
       'getPaperById',
-      'getAnalyseById'
+      'getAnalyseById',
+      'downloadResultFile'
     ]),
     handleSelectionChange(val) {
       this.ids = [];
@@ -465,7 +466,29 @@ export default {
     },
     analyseResult() {
       if (this.ids.length > 0) {
-        //TODO: 从后端获取结果
+        for (let paper of this.paperList) {
+          if (paper.id == this.ids[0]) {
+            if (paper.analyse_id > 0) {
+              this.downloadResultFile(paper.analyse_id).then(res => {
+                var blob = res;
+                if (window.navigator.msSaveOrOpenBlob) {			// IE浏览器下
+                  navigator.msSaveBlob(blob, `${paper.title}-内化结果`);
+                } else {
+                  var link = document.createElement("a");
+                  link.href = URL.createObjectURL(blob);
+                  link.download = `${paper.title}-内化结果`;
+                  link.click();
+                  window.URL.revokeObjectURL(link.href);
+                }
+              }).catch(err => {
+                this.$message.error(err);
+              })
+            } else {
+              this.$message.error('此外规未进行内化！');
+            }
+            break;
+          }
+        }
       } else {
         this.$message.warning('请选择要获取外规内化结果的法规');
       }

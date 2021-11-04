@@ -1,4 +1,9 @@
-import {getAnalyseByIdAPI, addAnalyseAPI, updateAnalyseByIdAPI} from "@/api/analyse";
+import {
+  getAnalyseByIdAPI,
+  addAnalyseAPI,
+  updateAnalyseByIdAPI,
+  downloadResultFileAPI
+} from "@/api/analyse";
 
 const analyse = {
   state: {},
@@ -42,7 +47,20 @@ const analyse = {
           reject(error);
         })
       })
-    }
+    },
+    downloadResultFile({}, data) {
+      return new Promise((resolve, reject) => {
+        downloadResultFileAPI(data).then(response => {
+          if (response.status) {
+            resolve(response.data);
+          } else {
+            reject('结果文件获取失败');
+          }
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
   }
 };
 export default analyse;
