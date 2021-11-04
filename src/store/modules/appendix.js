@@ -30,6 +30,8 @@ const appendix = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -41,6 +43,8 @@ const appendix = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -48,10 +52,12 @@ const appendix = {
       return new Promise((resolve, reject) => {
         downloadAppendixAPI(data).then(response => {
           if (response.status === 200) {
-            resolve(response.data)
+            resolve(response.data);
           } else {
-            reject(response.data.message);
+            reject('附件获取失败');
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
