@@ -25,6 +25,8 @@ const analyse = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
