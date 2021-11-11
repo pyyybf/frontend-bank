@@ -303,10 +303,10 @@ export default {
       this.analyseForm.content = params.file;
     },
     save() {
-      if (this.paperForm.title === '') {
+      if (this.analyseForm.title === '') {
         this.$message.error('请填写法规标题');
         return;
-      } else if (this.paperForm.category === '') {
+      } else if (this.analyseForm.category === '') {
         this.$message.error('请选择外规类别');
         return;
       }
