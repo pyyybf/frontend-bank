@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" placeholder="密码" prefix-icon="el-icon-lock" v-model="loginForm.password"
-                    autocomplete="off"></el-input>
+                    show-password autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-row>
