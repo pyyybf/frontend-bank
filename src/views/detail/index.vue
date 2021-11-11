@@ -395,6 +395,22 @@ export default {
       this.paperForm.content = params.file;
     },
     save() {
+      if (this.paperForm.title === '') {
+        this.$message.error('请填写法规标题');
+        return;
+      } else if (this.paperForm.department.length === 0) {
+        this.$message.error('请选择发文部门');
+        return;
+      } else if (this.paperForm.grade === '') {
+        this.$message.error('请选择效力等级');
+        return;
+      } else if (this.paperForm.release_time === '') {
+        this.$message.error('请选择发布日期');
+        return;
+      } else if (this.paperForm.implement_time === '') {
+        this.$message.error('请选择实施日期');
+        return;
+      }
       this.saveLoading = true;
       var date = new Date();
 
