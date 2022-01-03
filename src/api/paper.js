@@ -84,3 +84,11 @@ export const getRecentAnalyzedPapersAPI = () => {
     method: 'GET'
   })
 }
+
+export const getPaperIdByTitleAPI = (data) => {
+  return HttpRequest.request({
+    url: `${api.paperPre}/getPaperId`,
+    method: 'GET',
+    params: {title: data}
+  })
+}

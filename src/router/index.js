@@ -8,6 +8,7 @@ import Home from '@/views/home'
 import Detail from '@/views/detail'
 import Manage from '@/views/manage'
 import Analyse from '@/views/analyse'
+import Info from '@/views/info'
 
 Vue.use(Router)
 
@@ -53,6 +54,11 @@ export default new Router({
           path: '/analyse',
           name: 'Analyse',
           component: Analyse,
+        },
+        {
+          path: '/info',
+          name: 'Info',
+          component: Info,
         },
       ]
     }

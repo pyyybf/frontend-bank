@@ -8,6 +8,7 @@ import {
   getPaperByIdAPI,
   getStatisticalDataAPI,
   getRecentAnalyzedPapersAPI,
+  getPaperIdByTitleAPI,
 } from "@/api/paper";
 
 const paper = {
@@ -35,6 +36,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -46,6 +49,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -57,6 +62,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -68,6 +75,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -79,6 +88,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -90,6 +101,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -101,6 +114,8 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
         })
       })
     },
@@ -112,6 +127,21 @@ const paper = {
           } else {
             reject(response.data.message);
           }
+        }).catch(error => {
+          reject(error);
+        })
+      })
+    },
+    getPaperIdByTitle({}, data) {
+      return new Promise((resolve, reject) => {
+        getPaperIdByTitleAPI(data).then(response => {
+          if (response.data.success) {
+            resolve(response.data.content);
+          } else {
+            reject(response.data.message);
+          }
+        }).catch(error => {
+          reject(error);
         })
       })
     }

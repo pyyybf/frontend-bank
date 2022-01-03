@@ -66,7 +66,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="外规类别" prop="category">
-            <el-select v-model="paperForm.category" placeholder="请选择外规类别" style="width:95%;float: left">
+            <el-select v-model="paperForm.category" placeholder="请选择外规类别" clearable style="width:95%;float: left">
               <el-option
                 v-for="item in categoryOptions"
                 :key="item.value"

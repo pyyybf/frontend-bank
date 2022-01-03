@@ -14,7 +14,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力等级">
-                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="query-form-item">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" clearable class="query-form-item">
                   <el-option
                     v-for="item in gradeOptions"
                     :key="item.value"
@@ -62,7 +62,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.status" placeholder="请选择状态" class="query-form-item">
+                <el-select v-model="queryForm.status" placeholder="请选择状态" clearable class="query-form-item">
                   <el-option label="已发布" :value="true"></el-option>
                   <el-option label="未发布" :value="false"></el-option>
                 </el-select>
@@ -275,7 +275,6 @@ export default {
   methods: {
     ...mapActions([
       'getPaperList',
-      'getPaperById',
     ]),
     onReset() {
       this.queryForm = {
@@ -313,11 +312,11 @@ export default {
       })
     },
     handleRowClick(row) {
-      this.getPaperById(row.id).then(res => {
-        this.currentPaper = res;
-        this.drawer = true;
-      }).catch(err => {
-        this.$message.error(err);
+      this.$router.push({
+        path: '/info',
+        query: {
+          paperId: row.id,
+        }
       })
     },
   }

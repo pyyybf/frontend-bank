@@ -14,7 +14,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="效力等级">
-                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" class="query-form-item">
+                <el-select v-model="queryForm.grade" placeholder="请选择效力等级" clearable class="query-form-item">
                   <el-option
                     v-for="item in gradeOptions"
                     :key="item.value"
@@ -62,7 +62,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select v-model="queryForm.status" placeholder="请选择状态" class="query-form-item">
+                <el-select v-model="queryForm.status" placeholder="请选择状态" clearable class="query-form-item">
                   <el-option label="已发布" :value="true"></el-option>
                   <el-option label="未发布" :value="false"></el-option>
                 </el-select>
@@ -322,8 +322,6 @@ export default {
       'delPapers',
       'publishPapers',
       'abolishPapers',
-      'getPaperById',
-      'getAnalyseById',
       'downloadResultFile'
     ]),
     handleSelectionChange(val) {
@@ -368,20 +366,11 @@ export default {
       })
     },
     handleRowClick(row) {
-      this.getPaperById(row.id).then(res => {
-        this.currentPaper = res;
-        if (this.currentPaper.analyse_id > 0) {
-          this.getAnalyseById(this.currentPaper.analyse_id).then(analyseData => {
-            this.currentPaper.analyse = analyseData;
-            this.drawer = true;
-          }).catch(err => {
-            this.$message.error(err);
-          })
-        } else {
-          this.drawer = true;
+      this.$router.push({
+        path: '/info',
+        query: {
+          paperId: row.id,
         }
-      }).catch(err => {
-        this.$message.error(err);
       })
     },
     add() {
