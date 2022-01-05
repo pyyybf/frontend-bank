@@ -78,6 +78,30 @@
       </el-col>
       <el-col :span="10" id="container" style="height: 80vh;border: solid 1px lightgrey"></el-col>
     </el-row>
+    <el-table
+      :data="appendixList"
+      style="width: 100%;margin-bottom: 100px">
+      <el-table-column
+        label="附件名称"
+        prop="name">
+      </el-table-column>
+      <el-table-column
+        label="文件大小(KB)"
+        prop="size">
+      </el-table-column>
+      <el-table-column
+        label="创建人"
+        prop="creator">
+      </el-table-column>
+      <el-table-column label="操作" width="100">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            @click="handleDownload(scope.$index, scope.row)">下载
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -130,11 +154,34 @@ export default {
       },
       paperData: {},
       ifAnalyse: '法规原文',
+      appendixList: [],
     }
+  },
+  watch: {
+    ifAnalyse(newVal, oldVal) {
+      if (newVal === '法规原文') {
+        this.getAppendixList(this.$route.query.paperId).then(res => {
+          this.appendixList = res;
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      } else {
+        this.getAppendixList(-this.$route.query.paperId).then(res => {
+          this.appendixList = res;
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      }
+    },
   },
   mounted() {
     this.getPaperById(this.$route.query.paperId).then(res => {
       this.paperData = res;
+      this.getAppendixList(this.$route.query.paperId).then(res1 => {
+        this.appendixList = res1;
+      }).catch(err => {
+        this.$message.error(err);
+      })
       this.changePaper();
       this.initG6();
     }).catch(err => {
@@ -146,6 +193,8 @@ export default {
       'getPaperById',
       'getAnalyseById',
       'getPaperIdByTitle',
+      'getAppendixList',
+      'downloadAppendix'
     ]),
     goBack() {
       this.$router.back()
@@ -296,7 +345,10 @@ export default {
         defaultEdge: {
           style: {
             stroke: 'lightgrey',
-            endArrow: true,
+            endArrow: {
+              path: G6.Arrow.triangle(),
+              fill: 'lightgrey'
+            },
           },
         },
         nodeStateStyles: {
@@ -365,6 +417,30 @@ export default {
       const model = e.item.get('model');
       model.fx = e.x;
       model.fy = e.y;
+    },
+    handleDownload(index, row) {
+      if (row.id > 0) {  //编辑
+        this.downloadAppendix(row.id).then(res => {
+          var blob = res;
+          if (window.navigator.msSaveOrOpenBlob) {			// IE浏览器下
+            navigator.msSaveBlob(blob, row.name);
+          } else {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = row.name;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+          }
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      } else {  //新增
+        var link = document.createElement('a');  //创建一个a标签
+        link.href = URL.createObjectURL(this.appendixFileList[index]);
+        link.download = this.appendixFileList[index].name;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      }
     },
   }
 }
